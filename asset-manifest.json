@@ -1,18 +1,17 @@
 {
   "files": {
-    "main.css": "/portfolio/static/css/main.78ad2b30.css",
-    "main.js": "/portfolio/static/js/main.99cab5c2.js",
-    "static/js/787.1ed0c42c.chunk.js": "/portfolio/static/js/787.1ed0c42c.chunk.js",
+    "main.css": "/portfolio/static/css/main.8fe47d7f.css",
+    "main.js": "/portfolio/static/js/main.e67df4aa.js",
     "static/media/CGUToken.jpg": "/portfolio/static/media/CGUToken.5b3266bf62707c1a70ff.jpg",
     "static/media/header.jpg": "/portfolio/static/media/header.edcfafd6a529d98be435.jpg",
     "static/media/Breadchoice.png": "/portfolio/static/media/Breadchoice.962481a8a6485c12bc9a.png",
     "static/media/youtube.png": "/portfolio/static/media/youtube.6c51f6db1e613234872b.png",
     "static/media/svp.png": "/portfolio/static/media/svp.eff0ca236d36639d0328.png",
     "static/media/Skillsbg.jpg": "/portfolio/static/media/Skillsbg.7f4fadd39b15638f84d2.jpg",
+    "static/media/foodie.PNG": "/portfolio/static/media/foodie.f11c7e2088e44845249e.PNG",
     "static/media/Fazeel_CV.pdf": "/portfolio/static/media/Fazeel_CV.15c8f362031a4cf24267.pdf",
     "static/media/amazon.png": "/portfolio/static/media/amazon.1d7130c60e0fd3e0bd02.png",
     "static/media/agency.png": "/portfolio/static/media/agency.f59cdc4145e3bc5afff1.png",
-    "static/media/react1.png": "/portfolio/static/media/react1.b00c203261d86bd8c96c.png",
     "static/media/Circuit.PNG": "/portfolio/static/media/Circuit.981f31f9025b4d463dc6.PNG",
     "static/media/Motor.PNG": "/portfolio/static/media/Motor.edfccd9439ab6c9ddee1.PNG",
     "static/media/CRE05.PNG": "/portfolio/static/media/CRE05.cc43a962886ecb32af45.PNG",
@@ -22,15 +21,13 @@
     "static/media/CentraNo2-Medium.ttf": "/portfolio/static/media/CentraNo2-Medium.f94be5b326d78bb32b95.ttf",
     "static/media/CentraNo2-Book.ttf": "/portfolio/static/media/CentraNo2-Book.2b143fa4b734a3584043.ttf",
     "static/media/Helix.PNG": "/portfolio/static/media/Helix.c79bd137b82a6e8d1725.PNG",
-    "static/media/react2.png": "/portfolio/static/media/react2.ea1d8b9d73dedebdd772.png",
     "static/media/contact-img.svg": "/portfolio/static/media/contact-img.87eac2b29352fa01abb2f9510ef6ac7e.svg",
     "index.html": "/portfolio/index.html",
-    "main.78ad2b30.css.map": "/portfolio/static/css/main.78ad2b30.css.map",
-    "main.99cab5c2.js.map": "/portfolio/static/js/main.99cab5c2.js.map",
-    "787.1ed0c42c.chunk.js.map": "/portfolio/static/js/787.1ed0c42c.chunk.js.map"
+    "main.8fe47d7f.css.map": "/portfolio/static/css/main.8fe47d7f.css.map",
+    "main.e67df4aa.js.map": "/portfolio/static/js/main.e67df4aa.js.map"
   },
   "entrypoints": [
-    "static/css/main.78ad2b30.css",
-    "static/js/main.99cab5c2.js"
+    "static/css/main.8fe47d7f.css",
+    "static/js/main.e67df4aa.js"
   ]
 }
