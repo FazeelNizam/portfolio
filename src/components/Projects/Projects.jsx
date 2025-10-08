@@ -63,7 +63,8 @@ const Projects = () => {
           <h2>
             My <span className="highlight-text">Projects</span>
           </h2>
-          <p>Explore my work across different domains</p>
+          {/* <p>Explore my work across different domains </p> */}
+          <p>Still in development...!!!</p>
         </motion.div>
 
         {/* Tab Navigation */}
