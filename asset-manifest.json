@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/portfolio/static/css/main.48f4c84e.css",
+    "main.css": "/portfolio/static/css/main.8f25e7cf.css",
     "main.js": "/portfolio/static/js/main.b7c33108.js",
     "static/media/grid.svg": "/portfolio/static/media/grid.93f4b9db6165d338ce4d5a8bf046d5b1.svg",
     "static/media/cards-video.webm": "/portfolio/static/media/cards-video.2e89a5001b76c92e1338.webm",
@@ -30,18 +30,18 @@
     "static/media/mui.svg": "/portfolio/static/media/mui.3a178a8a6a31507db5b0e531a3b4536d.svg",
     "static/media/c.svg": "/portfolio/static/media/c.d59f1e96aead996cbe1676c969ea75f9.svg",
     "static/media/autodesk.svg": "/portfolio/static/media/autodesk.bd4692fa73f2fddf68bebc4f5e4fe540.svg",
+    "index.html": "/portfolio/index.html",
     "static/media/sass.svg": "/portfolio/static/media/sass.3eb461889f6a2271b6486e0d34150719.svg",
     "static/media/github.svg": "/portfolio/static/media/github.6b8a6fac11495f5584bbd0856021b4e9.svg",
     "static/media/js.svg": "/portfolio/static/media/js.54cdc12f1d62f6aeb77f27fe4e5f64c8.svg",
     "static/media/tailwind.svg": "/portfolio/static/media/tailwind.37df677da455e4168100ef58fec028c1.svg",
     "static/media/figma.svg": "/portfolio/static/media/figma.dad0daaca9c8ec750c059d9c686fc950.svg",
-    "index.html": "/portfolio/index.html",
     "static/media/nextjs.svg": "/portfolio/static/media/nextjs.0b4201703ca9dfbe9bdd6ef99103134f.svg",
-    "main.48f4c84e.css.map": "/portfolio/static/css/main.48f4c84e.css.map",
+    "main.8f25e7cf.css.map": "/portfolio/static/css/main.8f25e7cf.css.map",
     "main.b7c33108.js.map": "/portfolio/static/js/main.b7c33108.js.map"
   },
   "entrypoints": [
-    "static/css/main.48f4c84e.css",
+    "static/css/main.8f25e7cf.css",
     "static/js/main.b7c33108.js"
   ]
 }
