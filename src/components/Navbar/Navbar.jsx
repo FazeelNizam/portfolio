@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ImFacebook, ImLinkedin2 } from 'react-icons/im'
-import { FiGithub } from 'react-icons/fi'
 import { BiHomeAlt2 } from 'react-icons/bi'
 import { GiSkills } from 'react-icons/gi'
 import { AiOutlineProject } from 'react-icons/ai'
-import { TbDeviceMobileMessage } from 'react-icons/tb'
-// import logo from '../../../public/img/logo.png'
+import { FaUserTie } from 'react-icons/fa'
+import { FaGraduationCap } from "react-icons/fa";
 import './Navbar.scss'
-import { MdDesignServices } from 'react-icons/md'
 
 const NavBar = () => {
   const [activeLink, setActiveLink] = useState('home')
@@ -118,19 +115,37 @@ const NavBar = () => {
             </li>
             <li className="li">
               <a
-                href="#projects"
+                href="#experience"
                 className={
-                  activeLink === 'designs'
+                  activeLink === 'experience'
                     ? 'active navbar-link'
                     : 'navbar-link'
                 }
-                onClick={() => onUpdateActiveLink('designs')}
+                onClick={() => onUpdateActiveLink('experience')}
               >
                 <div className="icon">
-                  <MdDesignServices size={24} />
+                  <FaUserTie size={24} />
                 </div>
                 <div className="link-container">
-                  <span className="label">Designs</span>
+                  <span className="label">Work</span>
+                </div>
+              </a>
+            </li>
+            <li className="li">
+              <a
+                href="#education"
+                className={
+                  activeLink === 'education'
+                    ? 'active navbar-link'
+                    : 'navbar-link'
+                }
+                onClick={() => onUpdateActiveLink('education')}
+              >
+                <div className="icon">
+                  <FaGraduationCap size={24} />
+                </div>
+                <div className="link-container">
+                  <span className="label edu">Education</span>
                 </div>
               </a>
             </li>

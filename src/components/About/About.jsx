@@ -54,10 +54,13 @@ const About = () => {
         />
       </motion.div>
       <div className="bentoContainer">
-        <MagicContainer className="grid">
+        <MagicContainer
+          // Define a responsive grid: 1 column on mobile, 6 on large screens
+          className="grid grid-cols-1 lg:grid-cols-6 lg:grid-rows-3 gap-4"
+        >
           {/* Container 1 2 3 */}
           {counterCards.map((card) => (
-            <MagicCard className="item whitespace-pre-wrap text-6xl font-medium tracking-tighter">
+            <MagicCard className="item whitespace-pre-wrap text-6xl font-medium tracking-tighter lg:col-span-2">
               <span className="counter">
                 <NumberTicker value={card.value} delay={0.5} /> <p>+</p>
               </span>
@@ -71,7 +74,7 @@ const About = () => {
           ))}
 
           {/* Container 04 */}
-          <MagicCard className="item  text-sm">
+          <MagicCard className="item text-sm lg:col-span-3 lg:row-span-2">
             {/* <BorderBeam size={350} duration={10} delay={9} /> */}
             <div className="topContainer flex justify-between gap-[2%] w-[100%] h-[45%] flex-row">
               <div className="topImgContainer w-[auto] h-[100%]">
@@ -82,7 +85,7 @@ const About = () => {
                   <div></div>
                   <p>Available To Work</p>
                 </span>
-                <div className="flex h-[50%] w-[100%] flex-col justify-between">
+                <div className="flex h-[50%] w-[100%] flex-col justify-end">
                   <span className="name text-3xl text-white">Fazeel Nizam</span>
                   <div>
                     <span>I'm A</span>
@@ -129,8 +132,8 @@ const About = () => {
           </MagicCard>
 
           {/* Container 05 */}
-          <MagicCard className="item">
-            <h1 className="bottomText">
+          <MagicCard className="item lg:col-span-3 lg:row-span-3">
+            <h1 className="bottomTexth">
               <HiSquare3Stack3D />
               My Tech Stack
             </h1>
@@ -179,7 +182,7 @@ const About = () => {
           </MagicCard>
 
           {/* Container 06 */}
-          <MagicCard className="item">
+          <MagicCard className="item lg:col-span-2">
             <img className="absolute bg-cover" src={Grid6BG} alt="grid6BG" />
             {/* <img
               className="absolute w-[65%] bottom-0 right-[5%] opacity-80"
@@ -196,7 +199,7 @@ const About = () => {
           </MagicCard>
 
           {/* Container 07 */}
-          <MagicCard className="item">
+          <MagicCard className="item lg:col-span-2">
             <img
               className="absolute w-[70%] bottom-0 right-0 opacity-90"
               src={Grid7}
@@ -209,7 +212,7 @@ const About = () => {
           </MagicCard>
 
           {/* Container 08 */}
-          <MagicCard className="item">
+          <MagicCard className="item lg:col-span-2">
             <h1 className="bottomText">
               <IoRocket />
               Follow Me
@@ -228,7 +231,7 @@ const About = () => {
           </MagicCard>
 
           {/* Container 09 */}
-          <MagicCard className="item">
+          <MagicCard className="item lg:col-span-2">
             <div>
               <Spotlight
                 className="-top-[5%] left-[1%] w-[100%] h-[100%]"

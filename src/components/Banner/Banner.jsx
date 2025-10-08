@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import './Banner.scss'
 import { motion, useScroll, useTransform } from 'framer-motion'
 // import FancyText from '@carefully-coded/react-text-gradient'
 
 import Hero1 from '../../img/Hero/hero_f.png'
-import Hero2 from '../../img/Hero/hero_b.png'
+// import Hero2 from '../../img/Hero/hero_b.png'
 import Hero3 from '../../img/Hero/l.png'
 import Hero4 from '../../img/Hero/r.png'
 import { FlipWords } from '../ui/flip-words'
@@ -13,6 +13,7 @@ const Banner = () => {
   const ref = useRef()
   const words = [
     'Computer Engineer',
+    'Embedded System Engineer',
     'Software Engineer',
     'Frontend Developer',
     'Web Developer',
@@ -39,19 +40,19 @@ const Banner = () => {
     },
   }
 
-  const sliderVarients = {
-    initial: {
-      x: 0,
-    },
-    animate: {
-      x: '-220%',
-      transition: {
-        repeat: Infinity,
-        repeatType: 'mirror',
-        duration: 20,
-      },
-    },
-  }
+  // const sliderVarients = {
+  //   initial: {
+  //     x: 0,
+  //   },
+  //   animate: {
+  //     x: '-220%',
+  //     transition: {
+  //       repeat: Infinity,
+  //       repeatType: 'mirror',
+  //       duration: 20,
+  //     },
+  //   },
+  // }
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -59,7 +60,7 @@ const Banner = () => {
   })
 
   const sky = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
-  const front = useTransform(scrollYProgress, [0, 1], ['0%', '5%'])
+  // const front = useTransform(scrollYProgress, [0, 1], ['0%', '5%'])
   const back = useTransform(scrollYProgress, [0, 1], ['0%', '90%'])
   const mid1 = useTransform(scrollYProgress, [0, 1], ['0%', '70%'])
   const mid2 = useTransform(scrollYProgress, [0, 1], ['0%', '80%'])
@@ -123,6 +124,7 @@ const Banner = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ y: 80 }}
               transition={{ delay: 0.6, duration: 0.5 }}
+              className="name-text"
             >
               Fazeel Nizam
             </motion.span>

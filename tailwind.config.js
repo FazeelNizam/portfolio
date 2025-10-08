@@ -7,6 +7,7 @@ export const theme = {
       marquee: 'marquee var(--duration) linear infinite',
       'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
       spotlight: 'spotlight 2s ease .75s 1 forwards',
+      shimmer: 'shimmer 2s ease-in-out infinite',
     },
     keyframes: {
       gradient: {
@@ -14,7 +15,14 @@ export const theme = {
           backgroundPosition: 'var(--bg-size) 0',
         },
       },
-
+      shimmer: {
+        '0%': {
+          backgroundPosition: '-200% 0',
+        },
+        '100%': {
+          backgroundPosition: '200% 0',
+        },
+      },
       'shine-pulse': {
         '0%': {
           'background-position': '0% 0%',

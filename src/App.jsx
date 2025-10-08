@@ -5,6 +5,11 @@ import Navbar from './components/Navbar/Navbar'
 import Banner from './components/Banner/Banner'
 import About from './components/About/About'
 import Projects from './components/Projects/Projects'
+import Education from './components/Education/Education'
+import Experience from './components/Experience/Experience'
+import Footer from './components/Footer/Footer'
+import { DataProvider, useSiteData } from './context/DataProvider'
+import ErrorPage from './pages/ErrorPage'
 
 const App = () => {
   const [loading, setLoading] = useState(false)
@@ -22,15 +27,33 @@ const App = () => {
           <l-quantum size="55" speed="1.8" color="#9200fa"></l-quantum>
         </div>
       ) : (
-        <>
-          <Navbar />
-          <Banner />
-          <About />
-          <Projects />
-        </>
+    <>
+      <Navbar />
+      <Banner />
+      <About />
+      <Projects />
+      <Experience />
+      <Education />
+      <Footer />
+    </>
       )}
     </div>
   )
 }
+
+{/* const App = () => {
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    quantum.register()
+  }, [])
+
+  return (
+    <div>
+      <DataProvider>
+        <AppContent />
+      </DataProvider>
+    </div>
+  )
+} */}
 
 export default App

@@ -54,7 +54,7 @@ export const counterCards = [
 export const aboutCardTabData = [
   { svg: <FaClock />, text: 'IST' },
   { svg: <FaGraduationCap />, text: 'Open University' },
-  { svg: <GrTechnology />, text: 'Electronic Engineer Intern' },
+  // { svg: <GrTechnology />, text: 'Electronic Engineer Intern' },
   { svg: <MdOutlineLanguage />, text: 'Sinhala, English & Tamil' },
 ]
 

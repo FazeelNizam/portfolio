@@ -1,0 +1,442 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(6, 1, 20, 0.6);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 2rem;
+}
+
+.modalContent {
+  background: linear-gradient(135deg, rgba(12, 0, 21, 0.6) 0%, rgba(9, 10, 15, 0.6) 100%);
+  border-radius: 1.5rem;
+  max-width: 70vw;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 -10px 50px -10px rgba(66, 52, 91, 0.12), 0 25px 50px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem 2rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+
+  .headerLeft {
+    flex: 1;
+
+    .projectType {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+
+      .typeIcon {
+        font-size: 1.2rem;
+        color: #9200fa;
+        filter: drop-shadow(0 0 8px rgba(146, 0, 250, 0.35));
+      }
+
+      .typeLabel {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+    }
+
+    .projectTitle {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      margin: 0;
+      line-height: 1.2;
+    }
+  }
+
+  .closeBtn {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: white;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.modalBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  min-height: 0;
+
+  .projectImage {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .projectDetails {
+    padding: 2rem;
+
+    .detailsGrid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .detailSection {
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &::before {
+          content: '';
+          width: 4px;
+          height: 20px;
+          background: linear-gradient(135deg, #9200fa 0%, #7c3aed 100%);
+          border-radius: 2px;
+        }
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+
+      .technologiesList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+
+        .techTag {
+          background: rgba(145, 0, 249, 0.15);
+          color: #9200fa;
+          padding: 0.5rem 1rem;
+          border-radius: 25px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          border: 1px solid rgba(145, 0, 249, 0.3);
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba(145, 0, 249, 0.25);
+            transform: translateY(-2px);
+          }
+        }
+      }
+
+      .projectStats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+
+        .stat {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 1rem;
+
+          svg {
+            color: #9200fa;
+            font-size: 1.1rem;
+            filter: drop-shadow(0 0 6px rgba(146, 0, 250, 0.35));
+          }
+        }
+      }
+
+      .lastUpdated {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+
+        svg {
+          color: #9200fa;
+          filter: drop-shadow(0 0 6px rgba(146, 0, 250, 0.35));
+        }
+      }
+    }
+  }
+}
+
+.modalFooter {
+  padding: 1.5rem 2rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+
+  .actionButtons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .actionBtn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      min-width: 140px;
+      justify-content: center;
+
+      &.github {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+      }
+
+      &.live {
+        background: rgba(34, 197, 94, 0.18);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+
+        &:hover {
+          background: rgba(34, 197, 94, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+        }
+      }
+
+      &.behance {
+        background: rgba(0, 123, 255, 0.18);
+        color: #007bff;
+        border: 1px solid rgba(0, 123, 255, 0.3);
+
+        &:hover {
+          background: rgba(0, 123, 255, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+      }
+
+      svg {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media screen and (max-width: 768px) {
+  .modalOverlay {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .modalContent {
+    max-height: 100vh;
+    max-width: 90%;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 -10px 50px -10px rgba(66, 52, 91, 0.12), 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .modalHeader {
+    padding: 1.5rem 1.5rem 1rem;
+
+    .headerLeft {
+      .projectTitle {
+        font-size: 1.5rem;
+      }
+      
+      .projectType {
+        .typeLabel {
+          font-size: 0.85rem;
+        }
+      }
+    }
+
+    .closeBtn {
+      width: 35px;
+      height: 35px;
+      font-size: 1rem;
+    }
+  }
+
+  .modalBody {
+    .projectImage {
+      height: 250px;
+    }
+
+    .projectDetails {
+      padding: 1.5rem;
+
+      .detailsGrid {
+        gap: 1.5rem;
+      }
+
+      .detailSection {
+        h3 {
+          font-size: 1.1rem;
+        }
+
+        p {
+          font-size: 0.95rem;
+        }
+
+        .technologiesList {
+          .techTag {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+          }
+        }
+
+        .projectStats {
+          gap: 1rem;
+
+          .stat {
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+
+  .modalFooter {
+    padding: 1rem 1.5rem 1.5rem;
+
+    .actionButtons {
+      gap: 0.75rem;
+
+      .actionBtn {
+        padding: 0.65rem 1.2rem;
+        font-size: 0.9rem;
+        min-width: 120px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .modalHeader {
+    padding: 1.25rem 1rem 0.75rem;
+
+    .headerLeft {
+      .projectTitle {
+        font-size: 1.3rem;
+      }
+      
+      .projectType {
+        .typeIcon {
+          font-size: 1rem;
+        }
+        
+        .typeLabel {
+          font-size: 0.8rem;
+        }
+      }
+    }
+    
+    .closeBtn {
+      width: 32px;
+      height: 32px;
+      font-size: 0.9rem;
+    }
+  }
+
+  .modalBody {
+    .projectImage {
+      height: 200px;
+    }
+
+    .projectDetails {
+      padding: 1.25rem;
+
+      .detailSection {
+        h3 {
+          font-size: 1rem;
+        }
+        
+        p {
+          font-size: 0.9rem;
+        }
+
+        .technologiesList {
+          gap: 0.5rem;
+
+          .techTag {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.7rem;
+          }
+        }
+        
+        .projectStats {
+          .stat {
+            font-size: 0.85rem;
+          }
+        }
+        
+        .lastUpdated {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .modalFooter {
+    padding: 1rem 1rem 1.25rem;
+
+    .actionButtons {
+      flex-direction: column;
+      gap: 0.75rem;
+
+      .actionBtn {
+        width: 100%;
+        min-width: auto;
+        padding: 0.75rem 1.2rem;
+      }
+    }
+  }
+}
