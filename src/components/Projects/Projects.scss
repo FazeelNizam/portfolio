@@ -72,7 +72,7 @@ $shadows-big: multiple-box-shadow(120);
   }
 
   .tabsContainer {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     display: flex;
     justify-content: center;
     
@@ -148,7 +148,7 @@ $shadows-big: multiple-box-shadow(120);
         
         @media (max-width: 768px) {
           flex: 0 0 auto;
-          padding: 0.75rem 2rem;
+          padding: 0.75rem 1rem;
           border-radius: 40px;
           min-width: 48px;
         }
@@ -161,6 +161,19 @@ $shadows-big: multiple-box-shadow(120);
           color: white;
         }
       }
+    }
+  }
+
+  .projectsContent {
+    width: 100%;
+    min-height: 500px;
+    
+    @media (min-width: 768px) {
+      min-height: 700px;
+    }
+    
+    @media (min-width: 1024px) {
+      min-height: 750px;
     }
   }
 

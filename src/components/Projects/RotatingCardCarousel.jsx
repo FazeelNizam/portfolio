@@ -8,6 +8,13 @@ import "./RotatingCardCarousel.scss"
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"
 import { MagicCard, MagicContainer } from "../ui/MagicCard"
 
+const truncateDescription = (text, wordLimit = 15) => {
+  if (!text) return ""
+  const words = text.split(" ")
+  if (words.length <= wordLimit) return text
+  return words.slice(0, wordLimit).join(" ") + "...read more"
+}
+
 const RotatingCardCarousel = ({ projects, onProjectClick, paused = false }) => {
   const [isHovered, setIsHovered] = useState(false)
   const duplicated = useMemo(() => [...projects, ...projects], [projects])
@@ -58,22 +65,33 @@ const RotatingCardCarousel = ({ projects, onProjectClick, paused = false }) => {
     }
   }, [])
 
-  const getClosestCardIndex = () => {
+  const nextSlide = () => {
+    const track = trackRef.current
     const container = containerRef.current
-    if (!container) return 0
+    if (!track || !container) return
 
-    const cardWidth = 380
-    const gap = 16
+    const cardWidth = 380 // card width
+    const gap = 16 // gap between cards
     const containerWidth = container.offsetWidth
+
+    // Calculate how much to move to center the next card
     const centerOffset = (containerWidth - cardWidth) / 2
-    
-    // Calculate which card index is closest to center
-    const currentOffset = Math.abs(offsetRef.current)
-    const cardStep = cardWidth + gap
-    return Math.round((currentOffset - centerOffset) / cardStep)
+    const currentOffset = offsetRef.current
+
+    // Find the next card that's off-screen to the right
+    const moveAmount = cardWidth + gap
+    offsetRef.current = currentOffset - moveAmount
+
+    track.style.transition = "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
+    track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`
+
+    // Remove transition after animation completes
+    setTimeout(() => {
+      if (track) track.style.transition = ""
+    }, 500)
   }
 
-  const slideToCard = (targetIndex) => {
+  const prevSlide = () => {
     const track = trackRef.current
     const container = containerRef.current
     if (!track || !container) return
@@ -81,45 +99,21 @@ const RotatingCardCarousel = ({ projects, onProjectClick, paused = false }) => {
     const cardWidth = 380
     const gap = 16
     const containerWidth = container.offsetWidth
+
     const centerOffset = (containerWidth - cardWidth) / 2
-    const cardStep = cardWidth + gap
-    const trackWidth = track.scrollWidth / 2
+    const currentOffset = offsetRef.current
 
-    // Calculate target position to center the card
-    let targetOffset = -(targetIndex * cardStep + centerOffset)
-    
-    // Handle infinite loop by wrapping around
-    const totalCards = projects.length
-    if (Math.abs(targetOffset) >= trackWidth) {
-      // Wrap to equivalent position in first set
-      const wrappedIndex = targetIndex % totalCards
-      targetOffset = -(wrappedIndex * cardStep + centerOffset)
-    }
+    // Find the previous card that's off-screen to the left
+    const moveAmount = cardWidth + gap
+    offsetRef.current = currentOffset + moveAmount
 
-    // Pause animation during manual control
-    setIsHovered(true)
+    track.style.transition = "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
+    track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`
 
-    track.style.transition = "transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
-    offsetRef.current = targetOffset
-    track.style.transform = `translate3d(${targetOffset}px, 0, 0)`
-
-    // Resume animation after transition
+    // Remove transition after animation completes
     setTimeout(() => {
-      if (track) {
-        track.style.transition = ""
-        setIsHovered(false)
-      }
-    }, 600)
-  }
-
-  const nextSlide = () => {
-    const currentIndex = getClosestCardIndex()
-    slideToCard(currentIndex + 1)
-  }
-
-  const prevSlide = () => {
-    const currentIndex = getClosestCardIndex()
-    slideToCard(currentIndex - 1)
+      if (track) track.style.transition = ""
+    }, 500)
   }
 
   return (
@@ -150,7 +144,7 @@ const RotatingCardCarousel = ({ projects, onProjectClick, paused = false }) => {
 
                   <div className="cardContent">
                     <h3 className="projectTitle">{project.title}</h3>
-                    <p className="projectDescription">{project.description}</p>
+                    <p className="projectDescription">{truncateDescription(project.description, 15)}</p>
 
                     <div className="projectMeta">
                       {project.language && <span className="language">{project.language}</span>}

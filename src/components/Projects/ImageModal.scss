@@ -1,0 +1,96 @@
+.imageModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+}
+
+.imageModalContent {
+  position: relative;
+  max-width: 95vw;
+  max-height: 95vh;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .closeButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(6, 1, 20, 0.6);
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10001;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    @media (max-width: 768px) {
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 40px;
+      height: 40px;
+    }
+
+    svg {
+      width: 28px;
+      height: 28px;
+      color: white;
+
+      @media (max-width: 768px) {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    &:hover {
+      background: rgba(6, 1, 20, 0.7);
+      transform: rotate(90deg);
+    }
+  }
+
+  .imageContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(138, 43, 226, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+
+    img {
+      max-width: 95vw;
+      max-height: 95vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+
+      @media (max-width: 768px) {
+        max-width: 100vw;
+        max-height: 100vh;
+      }
+    }
+  }
+}

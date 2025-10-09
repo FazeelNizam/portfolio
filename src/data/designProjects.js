@@ -1,112 +1,78 @@
+import Test01 from '../img/projects/test1.jpeg'
+import Test02 from '../img/projects/test2.jpeg'
+import Test03 from '../img/projects/test3.jpeg'
+
 export const designProjects = [
   {
     id: 1,
     type : "design",
-    title: "Portfolio Website Design",
-    description: "Modern portfolio website design with dark theme, interactive elements, and smooth animations. Focus on user experience and visual hierarchy.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Figma", "Adobe XD", "Photoshop", "Illustrator", "Principle"],
+    title: "Test02",
+    image: Test02,
     behanceUrl: "https://www.behance.net/fazeelnizam/projects",
-    category: "Web Design",
-    features: [
-      "Dark theme design",
-      "Interactive animations",
-      "Responsive layout",
-      "User experience focus",
-      "Modern typography",
-      "Color psychology"
-    ],
-    status: "Completed",
-    duration: "2 weeks",
     tools: ["Figma", "Adobe Creative Suite"],
-    client: "Personal Project"
+    ratio: "2:1"
   },
   {
     id: 2,
     type : "design",
-    title: "Mobile App UI/UX Design",
-    description: "Complete mobile application design with user experience focus, including wireframes, prototypes, and design system implementation.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Figma", "Adobe Illustrator", "Principle", "Sketch", "InVision"],
+    title: "Test03",
+    image: Test03,
     behanceUrl: "https://www.behance.net/fazeelnizam/projects",
-    category: "Mobile Design",
-    features: [
-      "User research & personas",
-      "Wireframing & prototyping",
-      "Design system",
-      "User testing",
-      "Accessibility compliance",
-      "Platform guidelines"
-    ],
-    status: "Completed",
-    duration: "3 weeks",
     tools: ["Figma", "Principle", "Adobe Illustrator"],
-    client: "Tech Startup"
+    ratio: "1:1"
   },
   {
     id: 3,
     type : "design",
-    title: "Brand Identity Design",
-    description: "Complete brand identity design including logo, color palette, typography, and brand guidelines for a modern tech company.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Adobe Illustrator", "Photoshop", "InDesign", "Brand Guidelines"],
+    title: "Test01",
+    image: Test01,
     behanceUrl: "https://www.behance.net/fazeelnizam/projects",
-    category: "Brand Design",
-    features: [
-      "Logo design & variations",
-      "Color palette development",
-      "Typography selection",
-      "Brand guidelines",
-      "Marketing materials",
-      "Social media assets"
-    ],
-    status: "Completed",
-    duration: "2 weeks",
-    tools: ["Adobe Illustrator", "Photoshop", "InDesign"],
-    client: "Startup Company"
+    tools: ["Figma", "Principle", "Adobe Illustrator"],
+    ratio: "1:2"
   },
   {
     id: 4,
     type : "design",
-    title: "E-Commerce Website Design",
-    description: "Modern e-commerce website design with focus on conversion optimization, user experience, and mobile-first approach.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Figma", "Adobe XD", "Photoshop", "User Research", "A/B Testing"],
+    title: "Test03",
+    image: Test03,
     behanceUrl: "https://www.behance.net/fazeelnizam/projects",
-    category: "E-Commerce Design",
-    features: [
-      "Conversion optimization",
-      "Mobile-first design",
-      "User journey mapping",
-      "Product showcase",
-      "Checkout optimization",
-      "Trust & security elements"
-    ],
-    status: "Completed",
-    duration: "4 weeks",
-    tools: ["Figma", "Adobe XD", "Photoshop"],
-    client: "E-Commerce Client"
+    tools: ["Figma", "Principle", "Adobe Illustrator"],
+    ratio: "1:1"
   },
   {
     id: 5,
     type : "design",
-    title: "Dashboard UI Design",
-    description: "Analytics dashboard design with data visualization, user-friendly interface, and responsive design for multiple devices.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Figma", "Chart.js", "Data Visualization", "Responsive Design"],
+    title: "Test01",
+    image: Test01,
     behanceUrl: "https://www.behance.net/fazeelnizam/projects",
-    category: "Dashboard Design",
-    features: [
-      "Data visualization",
-      "User-friendly interface",
-      "Responsive design",
-      "Information architecture",
-      "Interactive elements",
-      "Performance optimization"
-    ],
-    status: "In Progress",
-    duration: "3 weeks",
-    tools: ["Figma", "Adobe XD"],
-    client: "SaaS Company"
+    tools: ["Figma", "Principle", "Adobe Illustrator"],
+    ratio: "1:2"
+  },
+  {
+    id: 6,
+    type : "design",
+    title: "Test03",
+    image: Test03,
+    behanceUrl: "https://www.behance.net/fazeelnizam/projects",
+    tools: ["Figma", "Principle", "Adobe Illustrator"],
+    ratio: "1:1"
+  },
+  {
+    id: 7,
+    type : "design",
+    title: "Test02",
+    image: Test02,
+    behanceUrl: "https://www.behance.net/fazeelnizam/projects",
+    tools: ["Figma", "Adobe Creative Suite"],
+    ratio: "2:1"
+  },
+  {
+    id: 8,
+    type : "design",
+    title: "Test03",
+    image: Test03,
+    behanceUrl: "https://www.behance.net/fazeelnizam/projects",
+    tools: ["Figma", "Principle", "Adobe Illustrator"],
+    ratio: "1:1"
   }
 ]

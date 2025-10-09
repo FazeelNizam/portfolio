@@ -7,6 +7,9 @@ import "./Projects.scss"
 // UI Components
 import ProjectModal from "./ProjectModal"
 import RotatingCardCarousel from "./RotatingCardCarousel"
+import DesignGallery from "./DesignGallery"
+import ImageModal from "./ImageModal"
+import { TypewriterEffectSmooth } from '../ui/TypeWriter'
 
 // Data
 import { embeddedProjects } from "../../data/embeddedProjects"
@@ -16,9 +19,47 @@ import { designProjects } from "../../data/designProjects"
 // Icons
 import { FaCode, FaPalette, FaMicrochip } from "react-icons/fa"
 
+const words = [
+  {
+    text: 'This',
+  },
+  {
+    text: 'section',
+  },
+  {
+    text: 'still',
+  },
+  {
+    text: 'under',
+  },
+  {
+    text: 'development.',
+  },
+  {
+    text: 'Stay',
+  },
+
+  {
+    text: 'tuned',
+  },
+  {
+    text: '.',
+  },
+  {
+    text: '.',
+  },
+  {
+    text: '.',
+  },
+  {
+    text: '!',
+  },
+]
+
 const Projects = () => {
   const [activeTab, setActiveTab] = useState("embedded")
   const [selectedProject, setSelectedProject] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null)
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
   const tabRefs = useRef({})
 
@@ -46,8 +87,16 @@ const Projects = () => {
     setSelectedProject(project)
   }
 
+  const handleImageClick = (image) => {
+    setSelectedImage(image)
+  }
+
   const closeModal = () => {
     setSelectedProject(null)
+  }
+
+  const closeImageModal = () => {
+    setSelectedImage(null)
   }
 
   return (
@@ -63,8 +112,8 @@ const Projects = () => {
           <h2>
             My <span className="highlight-text">Projects</span>
           </h2>
-          {/* <p>Explore my work across different domains </p> */}
-          <p>Still in development...!!!</p>
+          <p>Explore my work across different domains</p>
+          <TypewriterEffectSmooth words={words}/>
         </motion.div>
 
         {/* Tab Navigation */}
@@ -103,40 +152,59 @@ const Projects = () => {
           </div>
         </motion.div>
 
-        {/* Simple Card Carousel */}
         <motion.div
-          className="projectsCarousel"
+          className="projectsContent"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="sky-container">
-            <div className="star1"></div>
-            <div className="star2"></div>
-            <div className="star3"></div>
-          </div>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              style={{ width: "100%" }}
-            >
-              <RotatingCardCarousel
-                projects={projects[activeTab]}
-                onProjectClick={handleProjectClick}
-                paused={!!selectedProject}
-              />
-            </motion.div>
-          </AnimatePresence>
+          {activeTab !== "design" && (
+            <div className="projectsCarousel">
+              <div className="sky-container">
+                <div className="star1"></div>
+                <div className="star2"></div>
+                <div className="star3"></div>
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  style={{ width: "100%" }}
+                >
+                  <RotatingCardCarousel
+                    projects={projects[activeTab]}
+                    onProjectClick={handleProjectClick}
+                    paused={!!selectedProject}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
+
+          {activeTab === "design" && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key="design"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                style={{ width: "100%" }}
+              >
+                <DesignGallery designs={projects.design} onImageClick={handleImageClick} />
+              </motion.div>
+            </AnimatePresence>
+          )}
         </motion.div>
       </div>
 
-      {/* Project Modal */}
       <ProjectModal project={selectedProject} isOpen={!!selectedProject} onClose={closeModal} />
+
+      <ImageModal image={selectedImage} isOpen={!!selectedImage} onClose={closeImageModal} />
     </section>
   )
 }

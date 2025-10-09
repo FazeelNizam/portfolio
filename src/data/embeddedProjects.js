@@ -1,23 +1,26 @@
+import GreenHouse from '../img/projects/green_house.jpg'
+import Java from '../img/Logos/java.svg'
+import C from '../img/Logos/c.svg'
+
 export const embeddedProjects = [
   {
     id: 1,
     type : "embedded",
-    title: "Smart Home Automation System",
-    description: "IoT-based home automation system using ESP32 and Arduino with mobile app control. Features include smart lighting, temperature control, security monitoring, and energy management.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Arduino", "ESP32", "C++", "IoT", "Bluetooth", "WiFi", "Mobile App"],
-    githubUrl: "https://github.com/FazeelNizam/smart-home-automation",
+    title: "Multi-Unit Environmental & Agricultural Monitoring System",
+    description: "Distributed system with three wireless ESP32 nodes for real time environmental and soil monitoring. Wi-Fi–based data pipeline where one node serves sensor data via a JSON API and another consumes and uploads data to the cloud via Pi Zero MQTT Broker. a self-sufficient weather station capable of parsing complex SDI-12 protocols and logging timestamped data.",
+    image: GreenHouse,
+    technologies: ["ESP32", "Pi Zero", "Embedded C", "Python", "TEROS 10", "TEROS 22", "ATMOS 41"],
+    githubUrl: "https://github.com/FazeelNizam/green_house_monitoring_system",
     liveUrl: null,
     category: "IoT",
     features: [
       "Real-time sensor monitoring",
-      "Mobile app control",
-      "Energy consumption tracking",
-      "Security alerts",
-      "Voice control integration"
+      "High data acuracy",
+      "Multi protocol compatibility",
+      "3-2-1 backup rule for data availablity",
     ],
-    status: "Completed",
-    duration: "3 months"
+    status: "Ongoing",
+    duration: null
   },
   {
     id: 2,
