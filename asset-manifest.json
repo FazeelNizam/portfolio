@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/portfolio/static/css/main.fd468ecd.css",
-    "main.js": "/portfolio/static/js/main.c4e2251c.js",
+    "main.css": "/portfolio/static/css/main.8863fbca.css",
+    "main.js": "/portfolio/static/js/main.d68b2bfc.js",
     "static/media/grid.svg": "/portfolio/static/media/grid.93f4b9db6165d338ce4d5a8bf046d5b1.svg",
     "static/media/green_house.jpg": "/portfolio/static/media/green_house.c74749a48070bb867a03.jpg",
     "static/media/cards-video.webm": "/portfolio/static/media/cards-video.2e89a5001b76c92e1338.webm",
@@ -41,11 +41,11 @@
     "static/media/tailwind.svg": "/portfolio/static/media/tailwind.37df677da455e4168100ef58fec028c1.svg",
     "static/media/figma.svg": "/portfolio/static/media/figma.dad0daaca9c8ec750c059d9c686fc950.svg",
     "static/media/nextjs.svg": "/portfolio/static/media/nextjs.0b4201703ca9dfbe9bdd6ef99103134f.svg",
-    "main.fd468ecd.css.map": "/portfolio/static/css/main.fd468ecd.css.map",
-    "main.c4e2251c.js.map": "/portfolio/static/js/main.c4e2251c.js.map"
+    "main.8863fbca.css.map": "/portfolio/static/css/main.8863fbca.css.map",
+    "main.d68b2bfc.js.map": "/portfolio/static/js/main.d68b2bfc.js.map"
   },
   "entrypoints": [
-    "static/css/main.fd468ecd.css",
-    "static/js/main.c4e2251c.js"
+    "static/css/main.8863fbca.css",
+    "static/js/main.d68b2bfc.js"
   ]
 }
