@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+
 import './About.scss'
 
 //UI Components
@@ -15,7 +15,7 @@ import AnimatedGradientText from '../ui/AnimatedGradientText'
 import Grid6BG from '../../img/grid.svg'
 import Grid7 from '../../img/b5.svg'
 import DP from '../../img/dp.png'
-import cardVideo from '../../img/cards-video.webm'
+import Medusae from '../ui/medusae/Medusae'
 
 //CV
 import CV from '../../cv/Fazeel Nizam - CV.pdf'
@@ -41,19 +41,11 @@ import {
 
 const About = () => {
   return (
-    <section className="aboutWrapper" id="about">
-      <motion.div className="videoContainer">
-        <video
-          className="video"
-          preload="false"
-          playsInline
-          loop
-          muted
-          autoPlay
-          src={cardVideo}
-        />
-      </motion.div>
-      <div className="bentoContainer">
+    <section className="aboutWrapper" id="about" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'auto' }}>
+        <Medusae />
+      </div>
+      <div className="bentoContainer relative z-10">
         <MagicContainer
           // Define a responsive grid: 1 column on mobile, 6 on large screens
           className="grid grid-cols-1 lg:grid-cols-6 lg:grid-rows-3 gap-4"

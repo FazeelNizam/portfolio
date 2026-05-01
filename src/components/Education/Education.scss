@@ -2,14 +2,14 @@
   position: relative;
   min-height: 100vh;
   padding: 100px 0;
-  background: radial-gradient(ellipse at top center, #0c0021 0%, #090a0f 100%);
+  background: radial-gradient(ellipse at top center, #08001a 0%, #050508 100%);
   overflow: hidden;
   
   .gridBackground { 
     position: absolute; 
     inset: 0; 
     pointer-events: none; 
-    color: rgba(146,0,250,0.5); 
+    color: rgba(43, 0, 74, 0.5); 
   }
 }
 

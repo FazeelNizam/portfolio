@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import "./Projects.scss"
 
 // UI Components
 import ProjectModal from "./ProjectModal"
-import RotatingCardCarousel from "./RotatingCardCarousel"
+import ProjectList from "./ProjectList"
 import DesignGallery from "./DesignGallery"
 import ImageModal from "./ImageModal"
 import { TypewriterEffectSmooth } from '../ui/TypeWriter'
+import { Dock, DockIcon } from '../ui/Dock'
 
 // Data
 import { embeddedProjects } from "../../data/embeddedProjects"
@@ -60,8 +61,8 @@ const Projects = () => {
   const [activeTab, setActiveTab] = useState("embedded")
   const [selectedProject, setSelectedProject] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
-  const tabRefs = useRef({})
+  
+  const projectsRef = useRef(null)
 
   const tabs = [
     { id: "embedded", label: "Embedded Systems", icon: <FaMicrochip /> },
@@ -73,18 +74,6 @@ const Projects = () => {
     embedded: embeddedProjects,
     web: webProjects,
     design: designProjects,
-  }
-
-  useEffect(() => {
-    const activeTabElement = tabRefs.current[activeTab]
-    if (activeTabElement) {
-      const { offsetLeft, offsetWidth } = activeTabElement
-      setIndicatorStyle({ left: offsetLeft, width: offsetWidth })
-    }
-  }, [activeTab])
-
-  const handleProjectClick = (project) => {
-    setSelectedProject(project)
   }
 
   const handleImageClick = (image) => {
@@ -100,7 +89,7 @@ const Projects = () => {
   }
 
   return (
-    <section className="projectsWrapper" id="projects">
+    <section className="projectsWrapper relative" id="projects" ref={projectsRef}>
       <div className="projectsContainer">
         <motion.div
           className="projectsHeader"
@@ -116,41 +105,7 @@ const Projects = () => {
           <TypewriterEffectSmooth words={words}/>
         </motion.div>
 
-        {/* Tab Navigation */}
-        <motion.div
-          className="tabsContainer"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <div className="tabs">
-            <motion.div
-              className="tabIndicator"
-              initial={false}
-              animate={{
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-              }}
-            />
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                ref={(el) => (tabRefs.current[tab.id] = el)}
-                className={`tab ${activeTab === tab.id ? "active" : ""}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <span className="tabIcon">{tab.icon}</span>
-                <span className="tabLabel">{tab.label}</span>
-              </button>
-            ))}
-          </div>
-        </motion.div>
+
 
         <motion.div
           className="projectsContent"
@@ -175,10 +130,8 @@ const Projects = () => {
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   style={{ width: "100%" }}
                 >
-                  <RotatingCardCarousel
+                  <ProjectList
                     projects={projects[activeTab]}
-                    onProjectClick={handleProjectClick}
-                    paused={!!selectedProject}
                   />
                 </motion.div>
               </AnimatePresence>
@@ -200,6 +153,24 @@ const Projects = () => {
             </AnimatePresence>
           )}
         </motion.div>
+
+        {/* Sticky Dock Navigation */}
+        <div className="sticky bottom-6 z-50 w-full flex justify-center pointer-events-none mt-8">
+          <div className="pointer-events-auto">
+            <Dock>
+              {tabs.map((tab) => (
+                <DockIcon
+                  key={tab.id}
+                  label={tab.label}
+                  active={activeTab === tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  {tab.icon}
+                </DockIcon>
+              ))}
+            </Dock>
+          </div>
+        </div>
       </div>
 
       <ProjectModal project={selectedProject} isOpen={!!selectedProject} onClose={closeModal} />

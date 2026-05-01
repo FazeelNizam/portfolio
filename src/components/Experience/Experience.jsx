@@ -2,33 +2,62 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import './Experience.scss'
 import AnimatedGridPattern from '../../ui/AnimatedGridPattern'
+import AnimatedGradientText from '../ui/AnimatedGradientText'
+import { LightRays } from '../ui/LightRays'
 
 const experiences = [
   {
     id: 1,
-    year: '2025/03 - 2025/09',
-    role: 'Technical Assistant',
-    company: 'Career Guidance Unit - OUSL',
-    location: 'Nawala',
-    description:'Developed a portable GHG Analyzer for agricultural field research, featuring an automated workflow with high data accuracy and engineered a distributed environmental monitoring system using three wirelessly coordinating ESP32 units, featuring multi-protocol data aggregation from industsy level soil and atmospheric sensors.',
-    skills: ['Arduino', 'ESP32', 'C++', 'IoT']
+    year: 'Oct 2025 - Present',
+    role: 'Trainee IoT Engineer',
+    company: 'SLTMobitel Digital Projects',
+    location: 'Colombo, Sri Lanka',
+    description: 'Developing an AI-powered parking management system with low-latency RTSP video pipelines using GStreamer. Benchmarking YOLOv11n and OCR inference on Raspberry Pi 5 and NVIDIA Jetson Orin Nano. Designing a scalable IoT ecosystem featuring smart access control, power monitoring, and automated HVAC control.',
+    skills: ['NVIDIA Jetson', 'Raspberry Pi 5', 'YOLOv11n', 'GStreamer', 'IoT']
   },
   {
     id: 2,
-    year: '2024/07 - 2024/12',
-    role: 'Trainee Electronics Engineer',
-    company: 'Arthur C Clarke Institute for Modern Technologies',
-    location: 'Katubedda',
-    description:
-      'Designing a Power Control Unit and Self-Balancing Nano Satellite Testing Platform for Helmholtz Cage.',
-    skills: ['Arduino', 'ESP32', 'C++', 'IoT', 'Python', 'Power Electronics']
+    year: 'Mar 2025 - Sep 2025',
+    role: 'Technical Assistant',
+    company: 'Career Guidance Unit, OUSL',
+    location: 'Nawala, Sri Lanka',
+    description: 'Engineered a multi-node environmental monitoring system and a portable Greenhouse Gas (GHG) Analyzer for agricultural research. Provided technical support for university-wide hybrid career events.',
+    skills: ['ESP32', 'Pi Zero', 'Embedded C', 'Python']
   },
+  {
+    id: 3,
+    year: 'Jul 2024 - Dec 2024',
+    role: 'Trainee Electronic Engineer',
+    company: 'Arthur C Clarke Institute for Modern Technologies',
+    location: 'Katubedda, Sri Lanka',
+    description: 'Designed an ESP32-based Nano-Sterlite Orbital Magnetic Field Simulation Device (Helmholtz Cage), utilizing a PID algorithm to stabilize a frictionless air-bearing platform.',
+    skills: ['ESP32', 'Embedded C', 'FreeRTOS', 'PID Control']
+  },
+  {
+    id: 4,
+    year: 'Sep 2023 - Dec 2023',
+    role: 'Technical Assistant',
+    company: 'Neo Space Lab, OUSL',
+    location: 'Nawala, Sri Lanka',
+    description: 'Designed UI/UX for a Research Publication Web App and IoT dashboards using NextJS and MUI. Managed GitHub Repositories for IoT Weight Measurement System and LKO Web Dashboard.',
+    skills: ['NextJS', 'ReactJS', 'MUI', 'Figma']
+  },
+  {
+    id: 5,
+    year: 'Aug 2022 - Dec 2022',
+    role: 'Banking Trainee',
+    company: 'Commercial Bank of Ceylon',
+    location: 'Wellawatta, Sri Lanka',
+    description: 'Handled lower-counter operations, including account opening, debit card issuance, and E-Remittances, ensuring compliance and customer satisfaction.',
+    skills: ['Banking Operations', 'Customer Service']
+  }
 ]
 
 const Experience = () => {
   return (
     <section className="experienceWrapper" id="experience">
       <div className="gridBackground">
+        <LightRays />
         <AnimatedGridPattern
           numSquares={120}
           maxOpacity={0.12}
@@ -78,9 +107,11 @@ const Experience = () => {
                       <p className="description">{exp.description}</p>
                       <div className="skills">
                         <h5>Key Skills:</h5>
-                        <div className="skillTags">
+                        <div className="skillTags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                           {exp.skills.map((skill, idx) => (
-                            <span key={idx} className="skillTag">{skill}</span>
+                            <AnimatedGradientText key={idx} className="!px-3 !py-1 !rounded-full !m-0 !bg-[#9200fa]/10" speed={3}>
+                              <span className="text-xs font-medium text-white/80">{skill}</span>
+                            </AnimatedGradientText>
                           ))}
                         </div>
                       </div>

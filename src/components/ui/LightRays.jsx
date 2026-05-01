@@ -1,8 +1,6 @@
-// "use client"
-
-import React, { forwardRef, useEffect, useState } from "react"
-import { motion, AnimatePresence } from 'framer-motion'
-import { cn } from '../../utils/cn'
+import React, { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { cn } from "../../utils/cn"
 
 const createRays = (count, cycle) => {
   if (count <= 0) return []
@@ -29,13 +27,25 @@ const createRays = (count, cycle) => {
   })
 }
 
-const Ray = ({ left, rotate, width, swing, delay, duration, intensity }) => {
+const Ray = ({
+  left,
+  rotate,
+  width,
+  swing,
+  delay,
+  duration,
+  intensity,
+}) => {
   return (
     <motion.div
-      className="pointer-events-none absolute -top-[12%] left-[var(--ray-left)] h-[var(--light-rays-length)] w-[var(--ray-width)] origin-top -translate-x-1/2 rounded-full bg-gradient-to-b from-[color-mix(in_srgb,var(--light-rays-color)_70%,transparent)] to-transparent opacity-0 mix-blend-screen blur-[var(--light-rays-blur)]"
+      className="pointer-events-none absolute -top-[12%] origin-top -translate-x-1/2 rounded-full mix-blend-screen"
       style={{
-        "--ray-left": `${left}%`,
-        "--ray-width": `${width}px`,
+        left: `${left}%`,
+        width: `${width}px`,
+        height: 'var(--light-rays-length)',
+        filter: 'blur(var(--light-rays-blur))',
+        background: 'linear-gradient(to bottom, color-mix(in srgb, var(--light-rays-color) 70%, transparent), transparent)',
+        opacity: 0,
       }}
       initial={{ rotate: rotate }}
       animate={{
@@ -53,21 +63,16 @@ const Ray = ({ left, rotate, width, swing, delay, duration, intensity }) => {
   )
 }
 
-export const LightRays = forwardRef(function LightRays(
-  {
-    className,
-    style,
-    count = 7,
-    color = "rgba(160, 210, 255, 0.2)",
-    blur = 36,
-    opacity = 0.65, // kept for compatibility (not directly used in default styling)
-    speed = 14,
-    length = "70vh",
-    fill = true, // kept for compatibility
-    ...props
-  },
-  ref
-) {
+export function LightRays({
+  className,
+  style,
+  count = 7,
+  color = "rgba(52, 0, 90, 0.42)", // Updated to match the site's purple theme
+  blur = 36,
+  speed = 14,
+  length = "70vh",
+  ...props
+}) {
   const [rays, setRays] = useState([])
   const cycleDuration = Math.max(speed, 0.1)
 
@@ -77,9 +82,8 @@ export const LightRays = forwardRef(function LightRays(
 
   return (
     <div
-      ref={ref}
       className={cn(
-        "pointer-events-none absolute inset-0 isolate overflow-hidden rounded-[inherit]",
+        "pointer-events-none absolute inset-0 isolate overflow-hidden rounded-[inherit] z-0",
         className
       )}
       style={{
@@ -113,6 +117,4 @@ export const LightRays = forwardRef(function LightRays(
       </div>
     </div>
   )
-})
-
-LightRays.displayName = "LightRays"
+}

@@ -2,23 +2,25 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import './Education.scss'
 import AnimatedGridPattern from '../../ui/AnimatedGridPattern'
+import AnimatedGradientText from '../ui/AnimatedGradientText'
+import { LightRays } from '../ui/LightRays'
 
 const Education = () => {
   const educationData = [
     {
       id: 1,
-      year: '2021 - Present',
-      degree: 'Bachelor of Technology (Hons)',
+      year: '2021 - 2026',
+      degree: 'BSc (Hons) in Computer Engineering',
       field: 'Computer Engineering',
       institution: 'The Open University of Sri Lanka',
-      location: '',
-      description: 'Specialized in Computer Architecture, Software engineering, Embedded Systems, and Procesor Designing.',
+      location: 'Sri Lanka',
+      description: 'Focus: Embedded Systems, AI/ML, IoT, Digital System Design, Computer Vision, Processor Design.',
       achievements: [
-        'GPA - 3.58',
+        'Current GPA - 3.58',
         'Student Organizing committee President of ENOSPIRE OUSL 2024',
         'Technical Team Lead of TalentLyft 23 Career Fair 2023'
       ],
-      skills: ['Python', 'VHDL','C', 'C++', 'Java',  'Embedded Systems', 'Nural Networks', 'Machine Learning']
+      skills: ['Embedded Systems', 'AI/ML', 'IoT', 'Digital System Design', 'Computer Vision', 'Processor Design']
     },
     {
       id: 2,
@@ -44,36 +46,12 @@ const Education = () => {
     }
   ]
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3
-      }
-    }
-  }
 
-  const itemVariants = {
-    hidden: { 
-      opacity: 0, 
-      x: -100,
-      scale: 0.8
-    },
-    visible: { 
-      opacity: 1, 
-      x: 0,
-      scale: 1,
-      transition: {
-        duration: 0.8,
-        ease: 'easeOut'
-      }
-    }
-  }
 
   return (
     <section className="educationWrapper" id="education">
       <div className="gridBackground">
+        <LightRays />
         <AnimatedGridPattern
           numSquares={120}
           maxOpacity={0.12}
@@ -126,9 +104,11 @@ const Education = () => {
                       <p className="description">{education.description}</p>
                       <div className="skills">
                         <h5>Key Skills:</h5>
-                        <div className="skillTags">
+                        <div className="skillTags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                           {education.skills.map((skill, idx) => (
-                            <span key={idx} className="skillTag">{skill}</span>
+                            <AnimatedGradientText key={idx} className="!px-3 !py-1 !rounded-full !m-0 !bg-[#9200fa]/10" speed={3}>
+                              <span className="text-xs font-medium text-white/80">{skill}</span>
+                            </AnimatedGradientText>
                           ))}
                         </div>
                       </div>

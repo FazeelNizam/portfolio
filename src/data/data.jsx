@@ -42,7 +42,6 @@ import {
   FaLinkedin,
   FaWhatsapp,
 } from 'react-icons/fa'
-import { GrTechnology } from 'react-icons/gr'
 import { MdOutlineLanguage } from 'react-icons/md'
 
 export const counterCards = [

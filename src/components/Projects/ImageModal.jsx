@@ -18,16 +18,17 @@ const ImageModal = ({ image, isOpen, onClose }) => {
       {isOpen && (
         <motion.div
           className="imageModalOverlay"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+          animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
+          exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+          transition={{ duration: 0.4 }}
           onClick={handleBackdropClick}
         >
           <motion.div
             className="imageModalContent"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.8, opacity: 0, rotateZ: 2 }}
+            animate={{ scale: 1, opacity: 1, rotateZ: 0 }}
+            exit={{ scale: 0.8, opacity: 0, rotateZ: 2 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             <button className="closeButton" onClick={onClose} aria-label="Close modal">

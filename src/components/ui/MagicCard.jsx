@@ -43,6 +43,7 @@ const MagicContainer = ({ children, className }) => {
 
   useEffect(() => {
     onMouseMove()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mousePosition])
 
   const init = () => {

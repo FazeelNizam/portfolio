@@ -8,8 +8,6 @@ import Projects from './components/Projects/Projects'
 import Education from './components/Education/Education'
 import Experience from './components/Experience/Experience'
 import Footer from './components/Footer/Footer'
-import { DataProvider, useSiteData } from './context/DataProvider'
-import ErrorPage from './pages/ErrorPage'
 
 const App = () => {
   const [loading, setLoading] = useState(false)
@@ -41,19 +39,6 @@ const App = () => {
   )
 }
 
-{/* const App = () => {
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    quantum.register()
-  }, [])
 
-  return (
-    <div>
-      <DataProvider>
-        <AppContent />
-      </DataProvider>
-    </div>
-  )
-} */}
 
 export default App

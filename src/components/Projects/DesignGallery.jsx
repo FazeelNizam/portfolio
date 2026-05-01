@@ -1,106 +1,77 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { FaBehance } from "react-icons/fa"
-import "./DesignGallery.scss"
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { FaBehance } from "react-icons/fa";
 
-const getGridSpans = (ratio) => {
-  const defaultSpan = { colSpan: 1, rowSpan: 1 }
-
-  if (!ratio || typeof ratio !== "string") {
-    return defaultSpan
-  }
-
-  const parts = ratio.split(":")
-  if (parts.length !== 2) {
-    return defaultSpan
-  }
-
-  const [rowSpan, colSpan] = parts.map(Number)
-
-  if (isNaN(rowSpan) || isNaN(colSpan) || rowSpan <= 0 || colSpan <= 0) {
-    return defaultSpan
-  }
-
-  return {
-    rowSpan,
-    colSpan,
-  }
-}
+const Column = ({ data, y, onImageClick }) => (
+  <motion.div
+    style={{ y, willChange: 'transform' }}
+    className="flex flex-col gap-6 md:gap-8 w-full"
+  >
+    {data.map((design) => (
+      <div
+        key={design.id}
+        className="relative group overflow-hidden rounded-2xl cursor-pointer"
+        onClick={() => onImageClick(design)}
+      >
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-400 z-10" />
+        <img
+          src={design.image || "/placeholder.svg"}
+          alt={design.title || `Design ${design.id}`}
+          className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-600 ease-out grayscale group-hover:grayscale-0"
+          loading="lazy"
+          decoding="async"
+        />
+        {design.behanceUrl && (
+          <a
+            href={design.behanceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute bottom-4 left-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-full backdrop-blur-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <FaBehance />
+            <span className="text-sm font-medium">Behance</span>
+          </a>
+        )}
+      </div>
+    ))}
+  </motion.div>
+);
 
 const DesignGallery = ({ designs, onImageClick }) => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
+  const containerRef = useRef(null);
 
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  }
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const col1 = [];
+  const col2 = [];
+  const col3 = [];
+
+  designs.forEach((d, i) => {
+    if (i % 3 === 0) col1.push(d);
+    else if (i % 3 === 1) col2.push(d);
+    else col3.push(d);
+  });
+
+  // Reduced parallax range for better performance
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
   return (
-    <motion.div className="designGallery" variants={containerVariants} initial="hidden" animate="visible">
-      {designs.map((design) => {
-        const { colSpan, rowSpan } = getGridSpans(design.ratio)
+    <div ref={containerRef} className="w-full py-12 px-4 md:px-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 max-w-[1400px] mx-auto items-start">
+        <Column data={col1} y={y1} onImageClick={onImageClick} />
+        <Column data={col2} y={y2} onImageClick={onImageClick} />
+        <Column data={col3} y={y3} onImageClick={onImageClick} />
+      </div>
+    </div>
+  );
+};
 
-        return (
-          <motion.div
-            key={design.id}
-            className="galleryItem"
-            style={{
-              gridColumn: `span ${colSpan}`,
-              gridRow: `span ${rowSpan}`,
-            }}
-            variants={itemVariants}
-            whileHover={{ scale: 1.02, zIndex: 10 }}
-            onClick={() => onImageClick(design)}
-          >
-            <div className="imageWrapper">
-              <img src={design.image || "/placeholder.svg"} alt={design.title || `Design ${design.id}`} />
-              <div className="overlay">
-                <div className="overlayContent">
-                  {design.tools && design.tools.length > 0 && (
-                    <div className="tools">
-                      {design.tools.map((tool, index) => (
-                        <span key={index} className="tool">
-                          {tool}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {design.behanceUrl && (
-                    <a
-                      href={design.behanceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="behanceLink"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <FaBehance />
-                      <span>View on Behance</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )
-      })}
-    </motion.div>
-  )
-}
-
-export default DesignGallery
+export default DesignGallery;

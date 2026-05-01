@@ -1,85 +1,124 @@
 import GreenHouse from '../img/projects/green_house.jpg'
-import Java from '../img/Logos/java.svg'
-import C from '../img/Logos/c.svg'
+import GHG from '../img/projects/ghg.jpg'
+import ACCIMT from '../img/projects/helmholtz.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+// import GreenHouse from '../img/projects/green_house.jpg'
+
+
 
 export const embeddedProjects = [
   {
     id: 1,
     type : "embedded",
+    title: "Fuzzy Matrix Processing Unit",
+    description: "Architected a dedicated hardware accelerator using VHDL to perform Fuzzy Matrix operations. Validated design integrity through testbenches and post-synthesis timing simulations in Xilinx Vivado. Implemented and verified the synthesized design on a Nexys A7 Development Board (Artix-7 FPGA).",
+    image: "/placeholder.svg",
+    technologies: ["VHDL", "Xilinx Vivado", "FPGA (Artix-7)", "Digital System Design"],
+    githubUrl: "https://github.com/FazeelNizam/Fuzzy-Matrix-Processing-Unit",
+    liveUrl: null,
+    category: "FPGA Design",
+    features: [
+      "Hardware accelerator",
+      "Fuzzy Matrix operations",
+      "Post-synthesis timing simulations",
+      "Nexys A7 implementation"
+    ],
+    status: "Completed"
+  },
+  {
+    id: 2,
+    type : "embedded",
     title: "Multi-Unit Environmental & Agricultural Monitoring System",
-    description: "Distributed system with three wireless ESP32 nodes for real time environmental and soil monitoring. Wi-Fi–based data pipeline where one node serves sensor data via a JSON API and another consumes and uploads data to the cloud via Pi Zero MQTT Broker. a self-sufficient weather station capable of parsing complex SDI-12 protocols and logging timestamped data.",
+    description: "Architected a distributed system with three wireless ESP32 nodes for real-time environmental and soil monitoring. Programmed a self-sufficient weather station capable of parsing complex SDI-12 protocols and logging timestamped data.",
     image: GreenHouse,
-    technologies: ["ESP32", "Pi Zero", "Embedded C", "Python", "TEROS 10", "TEROS 22", "ATMOS 41"],
+    technologies: ["ESP32", "Pi Zero", "Embedded C", "Python", "MQTT"],
     githubUrl: "https://github.com/FazeelNizam/green_house_monitoring_system",
     liveUrl: null,
     category: "IoT",
     features: [
       "Real-time sensor monitoring",
-      "High data acuracy",
-      "Multi protocol compatibility",
-      "3-2-1 backup rule for data availablity",
+      "High data accuracy",
+      "Multi-protocol compatibility",
+      "3-2-1 backup rule for data availability",
     ],
-    status: "Ongoing",
-    duration: null
-  },
-  {
-    id: 2,
-    type : "embedded",
-    title: "Precision Robotic Arm Controller",
-    description: "High-precision robotic arm control system with computer vision integration. Capable of object detection, pick-and-place operations, and automated assembly tasks.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Arduino", "Python", "OpenCV", "Stepper Motors", "Computer Vision", "ROS"],
-    githubUrl: "https://github.com/FazeelNizam/robotic-arm-controller",
-    liveUrl: null,
-    category: "Robotics",
-    features: [
-      "Computer vision integration",
-      "Precision movement control",
-      "Object detection and tracking",
-      "Automated assembly",
-      "Real-time feedback system"
-    ],
-    status: "In Progress",
-    duration: "6 months"
+    status: "Ongoing"
   },
   {
     id: 3,
     type : "embedded",
-    title: "Weather Station with Data Logging",
-    description: "Comprehensive weather monitoring station with real-time data collection, cloud storage, and web dashboard for weather analysis and forecasting.",
-    image: "/api/placeholder/400/300",
-    technologies: ["Arduino", "Raspberry Pi", "Python", "SQLite", "Web Dashboard", "Cloud Storage"],
-    githubUrl: "https://github.com/FazeelNizam/weather-station",
-    liveUrl: "https://weather-station-demo.vercel.app",
-    category: "Environmental Monitoring",
+    title: "Portable GHG Analyzer for Agricultural Field Research",
+    description: "Built a standalone, keypad-operated device for precision GHG measurement, improving field research efficiency. Implemented a dual-file system (SPIFFS & SD card) and automated control for air circulation and stabilization.",
+    image: GHG,
+    technologies: ["ESP32", "Embedded C", "SPIFFS", "SD Card", "Sensors"],
+    githubUrl: "https://github.com/FazeelNizam/portable_ghg_analyzer",
+    liveUrl: null,
+    category: "Instrumentation",
     features: [
-      "Multi-sensor data collection",
-      "Real-time web dashboard",
-      "Historical data analysis",
-      "Weather forecasting",
-      "Mobile notifications"
+      "Laboratory-grade accuracy",
+      "Dual-file logging system",
+      "Automated air circulation",
+      "Keypad operation"
     ],
-    status: "Completed",
-    duration: "2 months"
+    status: "Completed"
   },
   {
     id: 4,
     type : "embedded",
-    title: "Smart Irrigation System",
-    description: "Automated irrigation system with soil moisture sensors, weather prediction, and water conservation features for efficient agricultural water management.",
-    image: "https://github.com/FazeelNizam/green_house_monitoring_system/blob/main/Images/Logger%20Circuit.jpg",
-    technologies: ["ESP32", "Soil Sensors", "Whether Station", "Pi Zero", "MQTT"],
-    githubUrl: "https://github.com/FazeelNizam/green_house_monitoring_system",
+    title: "Helmholtz Cage - Nano Sterlite Orbital Magnetic Field Simulation",
+    description: "Implemented IoT power control with a web dashboard hosted in ESP32 for remote monitoring. Developed a self-balancing, frictionless air-bearing platform using PID algorithm.",
+    image: ACCIMT,
+    technologies: ["ESP32", "Embedded C", "Python", "HTML", "CSS"],
+    githubUrl: "https://github.com/FazeelNizam",
     liveUrl: null,
-    category: "Agriculture Tech",
+    category: "Aerospace Testing",
     features: [
-      "Soil moisture monitoring",
-      "Weather-based scheduling",
-      "Water conservation",
-      "Remote control",
-      "Data analytics"
+      "Web dashboard hosted in ESP32",
+      "PID self-balancing platform",
+      "Frictionless air-bearing",
+      "Remote monitoring"
     ],
-    status: "Completed",
-    duration: "4 months"
+    status: "Completed"
+  },
+  {
+    id: 5,
+    type : "embedded",
+    title: "Smart Water Management System",
+    description: "Built a distributed IoT water-monitoring network with solar-powered LoRa sub-stations and a Wi-Fi base station for secure AWS IoT cloud integration. Streamed AES-encrypted sensor data via MQTT.",
+    image: "/placeholder.svg",
+    technologies: ["ESP32", "Embedded C", "FreeRTOS", "LoRa", "AWS IoT", "MQTT", "Blynk IoT"],
+    githubUrl: "https://github.com/FazeelNizam/Smart_Water_Management_System",
+    liveUrl: null,
+    category: "IoT Networks",
+    features: [
+      "Solar-powered LoRa sub-stations",
+      "AWS IoT integration",
+      "AES-encrypted data streaming",
+      "Real-time Blynk dashboard"
+    ],
+    status: "Completed"
+  },
+  {
+    id: 6,
+    type : "embedded",
+    title: "WPCU - Water Pump Control Unit",
+    description: "Designed and implemented an FSM-based control system for efficient water management. Developed and tested the system on an FPGA development board.",
+    image: "/placeholder.svg",
+    technologies: ["FPGA", "VHDL", "Vivado"],
+    githubUrl: "https://github.com/FazeelNizam/WPCU",
+    liveUrl: null,
+    category: "FPGA Design",
+    features: [
+      "FSM-based control system",
+      "Efficient water management",
+      "Hardware implementation"
+    ],
+    status: "Completed"
   }
 ]
