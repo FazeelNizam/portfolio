@@ -53,38 +53,43 @@ const Footer = () => {
     }
   };
 
-    return (
-    <footer className="footerWrapper" id="contact">
-      <div className="footerContent">
-        {/* Social Links */}
-          <div className="socialLinks">
-            {contactCard.map((card) => (
-              <a
-                href={card.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="socialLink"
-              >
-                <span className="socialIcon">{card.svg}</span>
-                {/* <p>{card.text}</p> */}
-              </a>
-            ))}
+  return (
+    <>
+      {/* Animated shimmer separator line */}
+      <div className="footerSeparator" />
+
+      <footer className="footerWrapper" id="contact">
+        <div className="footerContent">
+          {/* Social Links */}
+            <div className="socialLinks">
+              {contactCard.map((card) => (
+                <a
+                  href={card.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="socialLink"
+                >
+                  <span className="socialIcon">{card.svg}</span>
+                  {/* <p>{card.text}</p> */}
+                </a>
+              ))}
+            </div>
+
+          {/* Copyright */}
+          <div className="copyright">
+            <p>&copy; 2025 Fazeel Nizam. All rights reserved.</p>
           </div>
 
-        {/* Copyright */}
-        <div className="copyright">
-          <p>&copy; 2025 Fazeel Nizam. All rights reserved.</p>
+          {/* Scroll to Top Button */}
+          <button 
+            className="scrollToTop"
+            onClick={(e) => scrollToSection(e, '#home')}
+          >
+            ↑
+          </button>
         </div>
-
-        {/* Scroll to Top Button */}
-        <button 
-          className="scrollToTop"
-          onClick={(e) => scrollToSection(e, '#home')}
-        >
-          ↑
-        </button>
-      </div>
-    </footer>
+      </footer>
+    </>
   )
 }
 

@@ -16,8 +16,8 @@ const Particles = ({ config }) => {
   const { viewport } = useThree();
   const merged = useMemo(() => mergeConfig(config), [config]);
 
-  const countX = 100;
-  const countY = 55;
+  const countX = 140;
+  const countY = 75;
   const count = countX * countY;
 
   const geometry = useMemo(() => new THREE.PlaneGeometry(1, 1), []);

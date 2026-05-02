@@ -1,28 +1,28 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import './Experience.scss'
-import AnimatedGridPattern from '../../ui/AnimatedGridPattern'
 import AnimatedGradientText from '../ui/AnimatedGradientText'
-import { LightRays } from '../ui/LightRays'
+import { ScrollingCards } from '../ui/scrolling-cards'
+import { ShineBorder } from '../ui/shine-border'
 
 const experiences = [
   {
     id: 1,
-    year: 'Oct 2025 - Present',
-    role: 'Trainee IoT Engineer',
-    company: 'SLTMobitel Digital Projects',
-    location: 'Colombo, Sri Lanka',
-    description: 'Developing an AI-powered parking management system with low-latency RTSP video pipelines using GStreamer. Benchmarking YOLOv11n and OCR inference on Raspberry Pi 5 and NVIDIA Jetson Orin Nano. Designing a scalable IoT ecosystem featuring smart access control, power monitoring, and automated HVAC control.',
-    skills: ['NVIDIA Jetson', 'Raspberry Pi 5', 'YOLOv11n', 'GStreamer', 'IoT']
+    year: 'Aug 2022 - Dec 2022',
+    role: 'Banking Trainee',
+    company: 'Commercial Bank of Ceylon',
+    location: 'Wellawatta, Sri Lanka',
+    description: 'Handled lower-counter operations, including account opening, debit card issuance, and E-Remittances, ensuring compliance and customer satisfaction.',
+    skills: ['Banking Operations', 'Customer Service']
   },
   {
     id: 2,
-    year: 'Mar 2025 - Sep 2025',
+    year: 'Sep 2023 - Dec 2023',
     role: 'Technical Assistant',
-    company: 'Career Guidance Unit, OUSL',
+    company: 'Neo Space Lab, OUSL',
     location: 'Nawala, Sri Lanka',
-    description: 'Engineered a multi-node environmental monitoring system and a portable Greenhouse Gas (GHG) Analyzer for agricultural research. Provided technical support for university-wide hybrid career events.',
-    skills: ['ESP32', 'Pi Zero', 'Embedded C', 'Python']
+    description: 'Designed UI/UX for a Research Publication Web App and IoT dashboards using NextJS and MUI. Managed GitHub Repositories for IoT Weight Measurement System and LKO Web Dashboard.',
+    skills: ['NextJS', 'ReactJS', 'MUI', 'Figma']
   },
   {
     id: 3,
@@ -35,37 +35,59 @@ const experiences = [
   },
   {
     id: 4,
-    year: 'Sep 2023 - Dec 2023',
+    year: 'Mar 2025 - Sep 2025',
     role: 'Technical Assistant',
-    company: 'Neo Space Lab, OUSL',
+    company: 'Career Guidance Unit, OUSL',
     location: 'Nawala, Sri Lanka',
-    description: 'Designed UI/UX for a Research Publication Web App and IoT dashboards using NextJS and MUI. Managed GitHub Repositories for IoT Weight Measurement System and LKO Web Dashboard.',
-    skills: ['NextJS', 'ReactJS', 'MUI', 'Figma']
+    description: 'Engineered a multi-node environmental monitoring system and a portable Greenhouse Gas (GHG) Analyzer for agricultural research. Provided technical support for university-wide hybrid career events.',
+    skills: ['ESP32', 'Pi Zero', 'Embedded C', 'Python']
   },
   {
     id: 5,
-    year: 'Aug 2022 - Dec 2022',
-    role: 'Banking Trainee',
-    company: 'Commercial Bank of Ceylon',
-    location: 'Wellawatta, Sri Lanka',
-    description: 'Handled lower-counter operations, including account opening, debit card issuance, and E-Remittances, ensuring compliance and customer satisfaction.',
-    skills: ['Banking Operations', 'Customer Service']
+    year: 'Oct 2025 - Present',
+    role: 'Trainee IoT Engineer',
+    company: 'SLTMobitel Digital Projects',
+    location: 'Colombo, Sri Lanka',
+    description: 'Developing an AI-powered parking management system with low-latency RTSP video pipelines using GStreamer. Benchmarking YOLOv11n and OCR inference on Raspberry Pi 5 and NVIDIA Jetson Orin Nano. Designing a scalable IoT ecosystem featuring smart access control, power monitoring, and automated HVAC control.',
+    skills: ['NVIDIA Jetson', 'Raspberry Pi 5', 'YOLOv11n', 'GStreamer', 'IoT']
   }
 ]
 
 const Experience = () => {
+  const cards = experiences.map((exp, index) => ({
+    card: (
+      <div className="timelineCard" style={{ width: '100%', margin: 0, overflow: 'hidden' }}>
+        <ShineBorder shineColor={["#9200fa", "#c385f0", "#6d00b8"]} duration={10} />
+        <div className="cardHeader">
+          <div className="timelineYear" style={{ marginBottom: '1rem', textAlign: 'left' }}>
+            <span style={{ color: '#9200fa', fontWeight: 'bold', background: 'rgba(146, 0, 250, 0.1)', padding: '6px 12px', borderRadius: '12px', fontSize: '0.9rem' }}>{exp.year}</span>
+          </div>
+          <h3 className="degree">{exp.role}</h3>
+          <h4 className="field">{exp.company}</h4>
+          <div className="institution">
+            <span className="institutionName">{exp.location}</span>
+          </div>
+        </div>
+        <div className="cardBody">
+          <p className="description">{exp.description}</p>
+          <div className="skills">
+            <h5>Key Skills:</h5>
+            <div className="skillTags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+              {exp.skills.map((skill, idx) => (
+                <AnimatedGradientText key={idx} className="!px-3 !py-1 !rounded-full !m-0 !bg-[#9200fa]/10" speed={3}>
+                  <span className="text-xs font-medium text-white/80">{skill}</span>
+                </AnimatedGradientText>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    rotate: (index % 2 === 0 ? 1 : -1) * (index % 3 + 1) * 2,
+  }))
+
   return (
     <section className="experienceWrapper" id="experience">
-      <div className="gridBackground">
-        <LightRays />
-        <AnimatedGridPattern
-          numSquares={120}
-          maxOpacity={0.12}
-          duration={3}
-          repeatDelay={1}
-          className="[mask-image:radial-gradient(600px_circle_at_center,white,transparent)] inset-0"
-        />
-      </div>
       <div className="experienceContainer">
         <motion.div 
           className="experienceHeader"
@@ -80,53 +102,10 @@ const Experience = () => {
           <p>Professional journey and responsibilities</p>
         </motion.div>
 
-        <div className="timelineContainer">
-          <div className="timeline">
-            {experiences.map((exp, index) => (
-              <motion.div
-                key={exp.id}
-                className={`timelineItem ${index % 2 === 0 ? 'left' : 'right'}`}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                viewport={{ once: true, amount: 0.3 }}
-              >
-                <div className="timelineContent">
-                  <div className="timelineYear">
-                    <span>{exp.year}</span>
-                  </div>
-                  <div className="timelineCard">
-                    <div className="cardHeader">
-                      <h3 className="degree">{exp.role}</h3>
-                      <h4 className="field">{exp.company}</h4>
-                      <div className="institution">
-                        <span className="institutionName">{exp.location}</span>
-                      </div>
-                    </div>
-                    <div className="cardBody">
-                      <p className="description">{exp.description}</p>
-                      <div className="skills">
-                        <h5>Key Skills:</h5>
-                        <div className="skillTags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                          {exp.skills.map((skill, idx) => (
-                            <AnimatedGradientText key={idx} className="!px-3 !py-1 !rounded-full !m-0 !bg-[#9200fa]/10" speed={3}>
-                              <span className="text-xs font-medium text-white/80">{skill}</span>
-                            </AnimatedGradientText>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        <ScrollingCards cards={cards} cardWidth={450} top={40} left={25} animationLength={300} />
       </div>
     </section>
   )
 }
 
 export default Experience
-
-

@@ -10,7 +10,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
 }
 
 input,
@@ -56,4 +55,20 @@ h6 {
   margin: 0;
   padding: 0;
   line-height: normal;
+}
+
+.shine-border-animation {
+  animation: shine var(--duration, 14s) infinite linear;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
 }

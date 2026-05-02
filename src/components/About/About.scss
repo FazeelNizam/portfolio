@@ -79,7 +79,8 @@
       // backdrop-filter: blur(15px);
       box-shadow: 0 -10px 50px -10px rgba(66, 52, 91, 0.1) inset;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease-in-out;
+      transition: box-shadow 0.3s ease-in-out;
+      will-change: transform, opacity;
       color: white;
 
       &:hover {

@@ -24,25 +24,25 @@
       background-size: cover;
       background-position: bottom;
       background-repeat: no-repeat;
-      transition: 0.1s;
+      will-change: transform; // Hint for GPU acceleration
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
     }
 
     .midLayer2 {
       background-image: url('/img/Hero/mid_2.png');
-      transform: translateZ(-3px);
     }
 
     .midLayer1 {
       height: 57%;
       background-image: url('/img/Hero/mid_1.png');
-      transform: translateZ(-2px);
       background-repeat: no-repeat;
     }
 
     .backLayer {
       height: 75%;
       background-image: url('/img/Hero/back.png');
-      transform: translateZ(-4px);
       background-size: auto 100%;
       background-position: center bottom;
       background-repeat: no-repeat;

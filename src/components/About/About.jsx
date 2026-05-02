@@ -1,6 +1,8 @@
 import React from 'react'
-
 import './About.scss'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
 
 //UI Components
 import IconCloud from '../ui/IconCloud'
@@ -39,12 +41,47 @@ import {
   contactCard,
 } from '../../data/data'
 
+gsap.registerPlugin(ScrollTrigger)
+
 const About = () => {
+  const containerRef = React.useRef(null);
+
+  useGSAP(() => {
+    gsap.fromTo(".item", 
+      {
+        x: () => (Math.random() - 0.5) * 600,
+        y: () => (Math.random() - 0.5) * 600,
+        rotation: () => (Math.random() - 0.5) * 45,
+        opacity: 0,
+        scale: 0.6,
+      },
+      {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        opacity: 1,
+        scale: 1,
+        ease: "power2.out",
+        stagger: {
+          amount: 0.4,
+          from: "random"
+        },
+        scrollTrigger: {
+          trigger: ".bentoContainer",
+          start: "top 80%",
+          end: "top 20%",
+          scrub: 3,
+          toggleActions: "play none none reverse",
+        }
+      }
+    );
+  }, { scope: containerRef });
+
   return (
-    <section className="aboutWrapper" id="about" style={{ position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'auto' }}>
+    <section className="aboutWrapper" id="about" ref={containerRef} style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'auto' }}>
         <Medusae />
-      </div>
+      </div> */}
       <div className="bentoContainer relative z-10">
         <MagicContainer
           // Define a responsive grid: 1 column on mobile, 6 on large screens

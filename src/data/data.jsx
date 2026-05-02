@@ -134,6 +134,13 @@ export const aboutSlugs = [
   'gitlab',
   'visualstudiocode',
   'figma',
+  'easyeda',
+  'raspberrypi',
+  'nvidia',
+  'ultralytics',
+  'pytorch',
+  'tensorflow',
+  'opencv',
 ]
 
 export const aboutWords = [
