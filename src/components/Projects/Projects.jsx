@@ -1,8 +1,10 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import "./Projects.scss"
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 // UI Components
 import ProjectModal from "./ProjectModal"
@@ -19,6 +21,8 @@ import { designProjects } from "../../data/designProjects"
 
 // Icons
 import { FaCode, FaPalette, FaMicrochip } from "react-icons/fa"
+
+gsap.registerPlugin(ScrollTrigger)
 
 const words = [
   {
@@ -63,6 +67,14 @@ const Projects = () => {
   const [selectedImage, setSelectedImage] = useState(null)
   
   const projectsRef = useRef(null)
+
+  useEffect(() => {
+    // Refresh ScrollTrigger after tab transition finishes and layout settles
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 600)
+    return () => clearTimeout(timer)
+  }, [activeTab])
 
   const tabs = [
     { id: "embedded", label: "Embedded Systems", icon: <FaMicrochip /> },

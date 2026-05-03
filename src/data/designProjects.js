@@ -10,7 +10,6 @@ export const designProjects = [
     image: Test01,
     behanceUrl: "https://www.behance.net/gallery/241490155/Banners",
     tools: ["Adobe Photoshop", "Adobe Illustrator", "Figma"],
-    ratio: "2:1"
   },
   {
     id: 2,
@@ -19,7 +18,6 @@ export const designProjects = [
     image: Test02,
     behanceUrl: "https://www.behance.net/gallery/241489869/Business-Cards",
     tools: ["Adobe Illustrator", "Figma"],
-    ratio: "1:1"
   },
   {
     id: 3,
@@ -28,7 +26,6 @@ export const designProjects = [
     image: Test03,
     behanceUrl: "https://www.behance.net/gallery/194870365/Invitations",
     tools: ["Adobe Photoshop", "Canva"],
-    ratio: "1:2"
   },
   {
     id: 4,
@@ -37,7 +34,6 @@ export const designProjects = [
     image: Test01,
     behanceUrl: "https://www.behance.net/gallery/194869791/Cash-Prize",
     tools: ["Adobe Illustrator", "Adobe Photoshop"],
-    ratio: "1:1"
   },
   {
     id: 5,
@@ -46,7 +42,6 @@ export const designProjects = [
     image: Test02,
     behanceUrl: "https://www.behance.net/gallery/194869807/Brochure",
     tools: ["Adobe Illustrator", "Figma"],
-    ratio: "1:2"
   },
   {
     id: 6,
@@ -55,7 +50,6 @@ export const designProjects = [
     image: Test03,
     behanceUrl: "https://www.behance.net/gallery/194869823/Thanking-Card",
     tools: ["Adobe Photoshop"],
-    ratio: "1:1"
   },
   {
     id: 7,
@@ -64,7 +58,6 @@ export const designProjects = [
     image: Test01,
     behanceUrl: "https://www.behance.net/gallery/194869551/Greetings",
     tools: ["Adobe Illustrator", "Canva"],
-    ratio: "2:1"
   },
   {
     id: 8,
@@ -73,6 +66,5 @@ export const designProjects = [
     image: Test02,
     behanceUrl: "https://www.behance.net/gallery/194867505/Flyers",
     tools: ["Adobe Photoshop", "Adobe Illustrator"],
-    ratio: "1:1"
   }
 ]

@@ -1,177 +1,166 @@
-.designGallery {
+.design-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-auto-rows: 250px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   grid-auto-flow: dense;
-  gap: 0.2rem;
-  padding: 1rem 0.5rem;
+  gap: 1.5rem;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  max-height: 800px; 
-  overflow-y: auto;
-  overflow-x: hidden;
 
-  &::-webkit-scrollbar {
-    width: 6px;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 280px;
   }
-  &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(138, 43, 226, 0.5);
-    border-radius: 10px;
-    &:hover {
-      background: rgba(138, 43, 226, 0.7);
+}
+
+.design-card {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  &.landscape {
+    @media (min-width: 768px) {
+      grid-column: span 2;
     }
   }
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    grid-auto-rows: 150px;
-    gap: 0.1rem;
+  &.portrait {
+    @media (min-width: 768px) {
+      grid-row: span 2;
+    }
   }
 
-  .galleryItem {
-    position: relative;
-    overflow: hidden;
-    border-radius: 2px;
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(138, 43, 226, 0.2);
-    transition: all 0.3s ease;
+  .design-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: grayscale(100%) brightness(0.8);
+  }
 
-    .imageWrapper {
-      width: 100%;
-      height: 100%;
-      position: relative;
+  &:hover .design-img {
+    filter: grayscale(0%) brightness(1);
+    transform: scale(1.05);
+  }
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-      }
+  .design-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 1, 15, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    transition: all 0.4s ease;
+    z-index: 10;
+    text-align: center;
 
-      .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(6, 1, 20, 0.6);
-        backdrop-filter: blur(12px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        padding: 1.5rem;
+    .design-title {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      transform: translateY(10px);
+      transition: transform 0.4s ease;
+    }
 
-        .overlayContent {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1.5rem;
-          width: 100%;
+    .tools-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      transform: translateY(10px);
+      transition: transform 0.4s ease 0.1s;
 
-          .tools {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-
-            .tool {
-              background: rgba(255, 255, 255, 0.2);
-              color: white;
-              padding: 0.4rem 0.8rem;
-              border-radius: 20px;
-              font-size: 0.85rem;
-              font-weight: 500;
-              border: 1px solid rgba(255, 255, 255, 0.3);
-              backdrop-filter: blur(10px);
-              filter: drop-shadow(0 0 8px rgba(146, 0, 250, 0.35));
-              transition: all 0.2s ease;
-
-              &:hover {
-                cursor: auto;
-                transform: translateY(-2px);
-              }
-            }
-          }
-
-          .behanceLink {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: white;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 0.75rem 1.5rem;
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-
-            svg {
-              font-size: 1.5rem;
-            }
-
-            &:hover {
-              background: rgba(255, 255, 255, 0.25);
-              border-color: rgba(255, 255, 255, 0.6);
-              transform: translateY(-3px);
-              box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            }
-          }
-        }
+      .tool-pill {
+        background: rgba(146, 0, 250, 0.15);
+        color: #c385f0;
+        border: 1px solid rgba(146, 0, 250, 0.3);
+        padding: 0.3rem 0.75rem;
+        border-radius: 99px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
     }
 
-    &:hover {
-      border-color: rgba(47, 16, 79, 0.6);
-      // box-shadow: 0 8px 32px rgba(138, 43, 226, 0.3);
+    .shimmer-separator {
+      width: 80%;
+      height: 1px;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(146, 0, 250, 0.4) 25%,
+        #c385f0 50%,
+        rgba(146, 0, 250, 0.4) 75%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: design-shimmer 8s linear infinite;
+      opacity: 0;
+      transform: scaleX(0);
+      transition: all 0.5s ease 0.2s;
+    }
 
-      .imageWrapper {
-        img {
-          transform: scale(1.05);
-        }
+    .behance-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.6rem 1.2rem;
+      border-radius: 99px;
+      transition: all 0.3s ease;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: all 0.4s ease 0.3s;
 
-        .overlay {
-          opacity: 1;
-        }
+      &:hover {
+        background: #003da5; // Behance blue
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 61, 165, 0.4);
+      }
+
+      svg {
+        font-size: 1.1rem;
       }
     }
   }
 
-   @media (max-width: 480px) {
-    .galleryItem .imageWrapper .overlay {
-      padding: 0.5rem;
+  &:hover .design-overlay {
+    opacity: 1;
 
-      .overlayContent {
-        gap: 0.5rem;
+    .design-title,
+    .tools-list,
+    .behance-link {
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-        .tools .tool {
-          font-size: 0.7rem;
-          padding: 0.25rem 0.5rem;
-        }
-
-        .behanceLink {
-          padding: 0.4rem 0.8rem;
-          font-size: 0.75rem;
-          
-          span {
-            // display: none; 
-          }
-
-          svg {
-            font-size: 1rem;
-          }
-        }
-      }
+    .shimmer-separator {
+      opacity: 1;
+      transform: scaleX(1);
     }
   }
+}
+
+@keyframes design-shimmer {
+  0% { background-position: -100% center; }
+  100% { background-position: 100% center; }
 }
