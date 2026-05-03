@@ -15,13 +15,14 @@ import Medusae from './components/ui/medusae/Medusae'
 
 gsap.registerPlugin(ScrollTrigger)
 
+quantum.register()
 const App = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
-    setLoading(true)
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false)
     }, 2000)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
@@ -57,7 +58,7 @@ const App = () => {
       gsap.ticker.remove(lenis.raf)
     }
   }, [loading])
-  quantum.register()
+
   return (
     <div>
       {loading ? (

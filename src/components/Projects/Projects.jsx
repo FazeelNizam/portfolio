@@ -179,7 +179,10 @@ const Projects = () => {
                   key={tab.id}
                   label={tab.label}
                   active={activeTab === tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    projectsRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  }}
                 >
                   {tab.icon}
                 </DockIcon>

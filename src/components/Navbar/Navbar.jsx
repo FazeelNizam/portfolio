@@ -7,48 +7,46 @@ import { FaUserTie } from 'react-icons/fa'
 import { FaGraduationCap } from "react-icons/fa";
 import './Navbar.scss'
 
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
 const NavBar = () => {
   const [activeLink, setActiveLink] = useState('home')
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll('section')
-      const scrollPosition = window.scrollY + 200 // Adjust to trigger active state sooner
-
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop
-        const sectionHeight = section.offsetHeight
-        const sectionId = section.getAttribute('id')
-
-        if (
-          scrollPosition >= sectionTop &&
-          scrollPosition < sectionTop + sectionHeight
-        ) {
-          setActiveLink(sectionId)
-        }
+    const sectionIds = ['home', 'about', 'projects', 'experience', 'education']
+    
+    // Create triggers for each section
+    const triggers = sectionIds.map((id) => {
+      return ScrollTrigger.create({
+        trigger: `#${id}`,
+        start: "top 40%",
+        end: "bottom 40%",
+        onToggle: (self) => {
+          if (self.isActive) {
+            setActiveLink(id)
+          }
+        },
       })
+    })
 
+    const handleBaseScroll = () => {
       setScrolled(window.scrollY > 50)
     }
 
-    const debounceScroll = debounce(handleScroll, 50)
-    window.addEventListener('scroll', debounceScroll)
+    window.addEventListener('scroll', handleBaseScroll)
 
-    return () => window.removeEventListener('scroll', debounceScroll)
-  }, [])
+    // Initial check for 'home' if at the top
+    if (window.scrollY < 100) setActiveLink('home')
 
-  const debounce = (func, wait) => {
-    let timeout
-    return function (...args) {
-      const later = () => {
-        clearTimeout(timeout)
-        func(...args)
-      }
-      clearTimeout(timeout)
-      timeout = setTimeout(later, wait)
+    return () => {
+      window.removeEventListener('scroll', handleBaseScroll)
+      triggers.forEach(t => t.kill())
     }
-  }
+  }, [])
 
   const onUpdateActiveLink = (value) => {
     setActiveLink(value)

@@ -1,15 +1,10 @@
 import GreenHouse from '../img/projects/green_house.jpg'
 import GHG from '../img/projects/ghg.jpg'
 import ACCIMT from '../img/projects/helmholtz.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
-// import GreenHouse from '../img/projects/green_house.jpg'
+import SWMS from '../img/projects/SubStation.png'
+import FMU from '../img/projects/fmu.png'
+import WPCU from '../img/projects/RTL02.PNG'
+import ANRP from '../img/projects/ANRP.jpeg'
 
 
 
@@ -17,9 +12,27 @@ export const embeddedProjects = [
   {
     id: 1,
     type : "embedded",
+    title: "Automatic Number Plate Recognition (ANPR)",
+    description: "Developing an end-to-end ANPR and Vehicle Park Access Control System, focusing heavily on OCR optimization and system architecture to ensure accurate, real-time plate reading across highly variable localized Sri Lankan data.",
+    image: ANRP,
+    technologies: ["Python", "ReactJS", "Computer Vision", "OCR", "YOLO", "MQTT"],
+    githubUrl: "https://github.com/FazeelNizam/Automatic_Number_Plate_Recognition",
+    liveUrl: null,
+    category: "Machine Learning",
+    features: [
+      "OCR optimization",
+      "Real-time plate reading",
+      "YOLO object detection",
+      "MQTT integration"
+    ],
+    status: "In Progress"
+  },
+  {
+    id: 2,
+    type : "embedded",
     title: "Fuzzy Matrix Processing Unit",
     description: "Architected a dedicated hardware accelerator using VHDL to perform Fuzzy Matrix operations. Validated design integrity through testbenches and post-synthesis timing simulations in Xilinx Vivado. Implemented and verified the synthesized design on a Nexys A7 Development Board (Artix-7 FPGA).",
-    image: "/placeholder.svg",
+    image: FMU,
     technologies: ["VHDL", "Xilinx Vivado", "FPGA (Artix-7)", "Digital System Design"],
     githubUrl: "https://github.com/FazeelNizam/Fuzzy-Matrix-Processing-Unit",
     liveUrl: null,
@@ -33,7 +46,7 @@ export const embeddedProjects = [
     status: "Completed"
   },
   {
-    id: 2,
+    id: 3,
     type : "embedded",
     title: "Multi-Unit Environmental & Agricultural Monitoring System",
     description: "Architected a distributed system with three wireless ESP32 nodes for real-time environmental and soil monitoring. Programmed a self-sufficient weather station capable of parsing complex SDI-12 protocols and logging timestamped data.",
@@ -51,7 +64,7 @@ export const embeddedProjects = [
     status: "Ongoing"
   },
   {
-    id: 3,
+    id: 4,
     type : "embedded",
     title: "Portable GHG Analyzer for Agricultural Field Research",
     description: "Built a standalone, keypad-operated device for precision GHG measurement, improving field research efficiency. Implemented a dual-file system (SPIFFS & SD card) and automated control for air circulation and stabilization.",
@@ -69,7 +82,7 @@ export const embeddedProjects = [
     status: "Completed"
   },
   {
-    id: 4,
+    id: 5,
     type : "embedded",
     title: "Helmholtz Cage - Nano Sterlite Orbital Magnetic Field Simulation",
     description: "Implemented IoT power control with a web dashboard hosted in ESP32 for remote monitoring. Developed a self-balancing, frictionless air-bearing platform using PID algorithm.",
@@ -87,11 +100,11 @@ export const embeddedProjects = [
     status: "Completed"
   },
   {
-    id: 5,
+    id: 6,
     type : "embedded",
     title: "Smart Water Management System",
     description: "Built a distributed IoT water-monitoring network with solar-powered LoRa sub-stations and a Wi-Fi base station for secure AWS IoT cloud integration. Streamed AES-encrypted sensor data via MQTT.",
-    image: "/placeholder.svg",
+    image: SWMS,
     technologies: ["ESP32", "Embedded C", "FreeRTOS", "LoRa", "AWS IoT", "MQTT", "Blynk IoT"],
     githubUrl: "https://github.com/FazeelNizam/Smart_Water_Management_System",
     liveUrl: null,
@@ -105,11 +118,11 @@ export const embeddedProjects = [
     status: "Completed"
   },
   {
-    id: 6,
+    id: 7,
     type : "embedded",
     title: "WPCU - Water Pump Control Unit",
     description: "Designed and implemented an FSM-based control system for efficient water management. Developed and tested the system on an FPGA development board.",
-    image: "/placeholder.svg",
+    image: WPCU,
     technologies: ["FPGA", "VHDL", "Vivado"],
     githubUrl: "https://github.com/FazeelNizam/WPCU",
     liveUrl: null,

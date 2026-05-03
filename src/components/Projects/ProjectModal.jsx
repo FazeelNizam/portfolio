@@ -88,6 +88,12 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
             <div className="modalBody">
               {/* Project Image */}
               <div className="projectImage">
+                <img
+                  src={project.image || "/placeholder.svg"}
+                  alt=""
+                  className="img-blur-bg"
+                  aria-hidden="true"
+                />
                 <img src={project.image || "/placeholder.svg"} alt={project.title} />
               </div>
 

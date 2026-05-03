@@ -166,6 +166,12 @@ const ProjectRow = ({ project, idx }) => {
         transition={{ duration: 1.5, ease, delay: 0.1 }}
       >
         <div className="img-inner group">
+          <img
+            src={project.image || '/placeholder.svg'}
+            alt=""
+            className="img-blur-bg"
+            aria-hidden="true"
+          />
           <div className="img-overlay" />
           <img
             src={project.image || '/placeholder.svg'}
