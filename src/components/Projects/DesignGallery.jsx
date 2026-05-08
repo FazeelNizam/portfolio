@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBehance } from "react-icons/fa";
@@ -118,7 +116,7 @@ const DesignGallery = ({ designs, onImageClick }) => {
             className="flex flex-col items-center gap-6"
           >
             <l-quantum size="45" speed="1.8" color="#9200fa"></l-quantum>
-            <span className="text-xs text-[#9200fa] tracking-[0.3em] uppercase font-bold opacity-80">Curating Gallery</span>
+            {/* <span className="text-xs text-[#9200fa] tracking-[0.3em] uppercase font-bold opacity-80">Curating Gallery</span> */}
           </motion.div>
         ) : (
           <motion.div 

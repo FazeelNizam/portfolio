@@ -25,8 +25,8 @@ const Banner = () => {
     'Computer Engineer',
     'Embedded System Engineer',
     'Software Engineer',
-    'Frontend Developer',
-    'Web Developer',
+    'Fullstack Developer',
+    'AI Engineer',
     'Graphic Designer',
   ]
 
@@ -115,12 +115,15 @@ const Banner = () => {
               Fazeel Nizam
             </motion.span>
           </div>
-          <div
+          <motion.div
             ref={text2Ref}
             className="bannerFlipText"
+            initial={{ opacity: 0, y: 80 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
           >
             <FlipWords color="white" words={words} />
-          </div>
+          </motion.div>
           <motion.div
             className="frontLayer"
             initial={{ opacity: 0, y: 80 }}

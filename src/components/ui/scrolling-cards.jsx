@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger)
 function ScrollingCards({
   cards,
   cardWidth,
-  top = 45,
+  top = 55,
   left = 20,
   animationLength = 200,
   scrollerRef,
@@ -22,7 +22,7 @@ function ScrollingCards({
 
     // Set initial position for all cards (below viewport)
     gsap.set(cardsRef.current, {
-      top: window.innerHeight + 250,
+      top: window.innerHeight + 300,
       rotate: (i) => `${cards[i].rotate}deg`,
     })
 

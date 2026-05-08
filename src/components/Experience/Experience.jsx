@@ -102,7 +102,7 @@ const Experience = () => {
           <p>Professional journey and responsibilities</p>
         </motion.div>
 
-        <ScrollingCards cards={cards} cardWidth={450} top={40} left={25} animationLength={300} />
+        <ScrollingCards cards={cards} cardWidth={450} top={50} left={25} animationLength={300} />
       </div>
     </section>
   )

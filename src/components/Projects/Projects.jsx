@@ -124,13 +124,13 @@ const Projects = () => {
           >
             Explore my work across different domains
           </motion.p>
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
             <TypewriterEffectSmooth words={words}/>
-          </motion.div>
+          </motion.div> */}
         </motion.div>
 
 

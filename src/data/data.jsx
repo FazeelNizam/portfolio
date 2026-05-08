@@ -145,9 +145,10 @@ export const aboutSlugs = [
 
 export const aboutWords = [
   'Computer Engineer',
+  'Embedded System Engineer',
   'Software Engineer',
-  'Frontend Developer',
-  'Web Developer',
+  'Fullstack Developer',
+  'AI Engineer',
   'Graphic Designer',
 ]
 
