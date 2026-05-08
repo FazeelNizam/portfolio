@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/portfolio/static/css/main.8c2efee7.css",
-    "main.js": "/portfolio/static/js/main.c2b1c769.js",
+    "main.css": "/portfolio/static/css/main.2b67c2d7.css",
+    "main.js": "/portfolio/static/js/main.e273b079.js",
     "static/media/grid.svg": "/portfolio/static/media/grid.93f4b9db6165d338ce4d5a8bf046d5b1.svg",
     "static/media/banner1.png": "/portfolio/static/media/banner1.bebf1987319da0fb9e90.png",
     "static/media/greetings2.png": "/portfolio/static/media/greetings2.e45245dc49b4dab03858.png",
@@ -24,8 +24,8 @@
     "static/media/invitation1.png": "/portfolio/static/media/invitation1.03a40bf30425761736c2.png",
     "static/media/SubStation.png": "/portfolio/static/media/SubStation.2c8064f70898ede9a233.png",
     "static/media/ghg.jpg": "/portfolio/static/media/ghg.cdb588f87ab813754399.jpg",
-    "static/media/Fazeel Nizam - CV.pdf": "/portfolio/static/media/Fazeel Nizam - CV.8a697fc006211dffd1e5.pdf",
     "static/media/cashprize.png": "/portfolio/static/media/cashprize.69eabb9043429c56e3b6.png",
+    "static/media/Fazeel Nizam - CV.pdf": "/portfolio/static/media/Fazeel Nizam - CV.8b83c71c7dd6f9eafe41.pdf",
     "static/media/flyer7.png": "/portfolio/static/media/flyer7.0911239ddbba9fadda0a.png",
     "static/media/research.png": "/portfolio/static/media/research.2236c036b9d07d209c7b.png",
     "static/media/flyer10.png": "/portfolio/static/media/flyer10.be799b56473768642f6b.png",
@@ -75,11 +75,11 @@
     "static/media/tailwind.svg": "/portfolio/static/media/tailwind.37df677da455e4168100ef58fec028c1.svg",
     "static/media/figma.svg": "/portfolio/static/media/figma.dad0daaca9c8ec750c059d9c686fc950.svg",
     "static/media/nextjs.svg": "/portfolio/static/media/nextjs.0b4201703ca9dfbe9bdd6ef99103134f.svg",
-    "main.8c2efee7.css.map": "/portfolio/static/css/main.8c2efee7.css.map",
-    "main.c2b1c769.js.map": "/portfolio/static/js/main.c2b1c769.js.map"
+    "main.2b67c2d7.css.map": "/portfolio/static/css/main.2b67c2d7.css.map",
+    "main.e273b079.js.map": "/portfolio/static/js/main.e273b079.js.map"
   },
   "entrypoints": [
-    "static/css/main.8c2efee7.css",
-    "static/js/main.c2b1c769.js"
+    "static/css/main.2b67c2d7.css",
+    "static/js/main.e273b079.js"
   ]
 }
