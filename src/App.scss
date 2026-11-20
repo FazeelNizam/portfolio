@@ -81,7 +81,6 @@
 html {
   background: var(--bg);
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--nav-h) + 8px);
   &.scroll-locked {
     overflow: hidden;
   }
@@ -231,8 +230,8 @@ main {
 
 .section {
   position: relative;
-  padding-block: var(--section-y);
-  scroll-margin-top: calc(var(--nav-h) - 8px);
+  // the section's own top padding (≥ nav height) clears the fixed nav, so no scroll-margin needed
+  padding-block: max(var(--section-y), calc(var(--nav-h) + 1rem));
 }
 
 /* Shared section header */

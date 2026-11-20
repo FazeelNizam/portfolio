@@ -24,6 +24,7 @@ import {
 import { portraitVertex, portraitFragment, WAKE_SIZE } from './shaders/portrait'
 import { dprForTier } from '../lib/device'
 import { samplePortrait } from './portraitSampler'
+import { stats } from '../lib/ticker'
 
 const FOV = 30
 const CAM_Z = 10
@@ -236,6 +237,7 @@ export default class HeroParticles {
     this.canvas.style.opacity = this.reduced ? String(1 - Math.min(1, this.scroll * 1.6)) : ''
 
     this.renderer.render(this.scene, this.camera)
+    stats.hero++
     this.needsRender = false
   }
 

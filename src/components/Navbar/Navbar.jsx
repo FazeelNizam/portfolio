@@ -108,15 +108,21 @@ const NavBar = () => {
 
   const go = (e, id) => {
     e.preventDefault()
+    const wasOpen = open
     setOpen(false)
     setActive(id)
-    scrollToTarget(id === 'home' ? 0 : `#${id}`)
-    // move focus to the section for keyboard / screen-reader users
-    const el = document.getElementById(id)
-    if (el) {
-      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1')
-      el.focus({ preventScroll: true })
+    const run = () => {
+      scrollToTarget(id === 'home' ? 0 : `#${id}`)
+      // move focus to the section for keyboard / screen-reader users
+      const el = document.getElementById(id)
+      if (el) {
+        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1')
+        el.focus({ preventScroll: true })
+      }
     }
+    // when closing the mobile sheet, wait until its scroll lock is released
+    if (wasOpen) requestAnimationFrame(() => requestAnimationFrame(run))
+    else run()
   }
 
   // mobile sheet: scroll lock, Esc, focus trap, focus return
@@ -133,7 +139,8 @@ const NavBar = () => {
         return
       }
       if (e.key !== 'Tab') return
-      const els = [...focusables(), toggleRef.current]
+      // DOM order: the toggle comes before the sheet
+      const els = [toggleRef.current, ...focusables()]
       const i = els.indexOf(document.activeElement)
       if (e.shiftKey && i <= 0) {
         e.preventDefault()

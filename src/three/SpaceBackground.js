@@ -35,6 +35,7 @@ import { fullscreenVertex, nebulaFragment, starVertex, starFragment } from './sh
 import { medusaeVertex, medusaeFragment } from './shaders/medusae'
 import MEDUSAE_DEFAULTS from '../components/ui/medusae/defaults'
 import { dprForTier } from '../lib/device'
+import { stats } from '../lib/ticker'
 
 const STARS = { 1: 900, 2: 1800, 3: 3000 }
 const MEDUSAE_GRID = { 1: [70, 38], 2: [104, 56], 3: [140, 75] }
@@ -329,6 +330,7 @@ export default class SpaceBackground {
     r.setViewport(0, 0, this.w, this.h)
     r.clear()
     r.render(this.bgScene, this.orthoCam)
+    stats.bg++
 
     // medusae: only where its sections are on screen
     const m = this.medusae

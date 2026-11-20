@@ -20,6 +20,7 @@ import {
   Raycaster,
   Vector2,
 } from 'three'
+import { stats } from '../lib/ticker'
 
 const R = 2.2
 const STEP = 0.82
@@ -186,6 +187,7 @@ export default class ProjectCarouselGL {
       u.uFade.value = this.fade
     })
     renderer.render(this.scene, this.camera)
+    stats.projects++
   }
 
   dispose() {

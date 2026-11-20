@@ -106,4 +106,10 @@ export const quality = {
   },
 }
 
-if (typeof window !== 'undefined') window.__quality = quality
+/** Frame counters per WebGL layer (read by the e2e checks: pause off-screen / hidden tab). */
+export const stats = { bg: 0, hero: 0, projects: 0 }
+
+if (typeof window !== 'undefined') {
+  window.__quality = quality
+  window.__frames = stats
+}
