@@ -112,6 +112,8 @@ async function buildPortrait() {
     .resize(SIZE, SIZE)
     .png({ compressionLevel: 9 })
     .toFile(path.join(pub, 'hero', 'portrait-particles.png'))
+  // smaller copy the site actually loads (alpha preserved)
+  await sharp(path.join(pub, 'hero', 'portrait-particles.png')).webp({ quality: 88, alphaQuality: 100 }).toFile(path.join(pub, 'hero', 'portrait-particles.webp'))
   // About-card avatar (original look, just compressed)
   for (const w of [256, 512]) {
     await sharp(input).resize(w).webp({ quality: 80 }).toFile(path.join(pub, 'hero', `dp-${w}.webp`))

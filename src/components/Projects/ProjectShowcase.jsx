@@ -60,12 +60,14 @@ function ProjectCards({ projects, onOpen }) {
       <ol className="pj-cards__track" ref={trackRef} aria-label="Projects">
         {projects.map((p, i) => (
           <li key={p.id} className="pj-card" aria-label={`${i + 1} of ${projects.length}`}>
-            <button type="button" className="pj-card__media" onClick={() => onOpen(p)} aria-label={`Open details: ${p.title}`}>
-              <ResponsivePicture src={p.image} alt="" sizes="(max-width: 767px) 86vw, 420px" />
+            <div className="pj-card__media">
+              <button type="button" className="pj-card__media-btn" onClick={() => onOpen(p)} aria-label={`Open details: ${p.title}`}>
+                <ResponsivePicture src={p.image} alt="" sizes="(max-width: 767px) 86vw, 420px" />
+              </button>
               <span className="pj-card__status" data-tone={statusTone(p.status)}>
                 {p.status}
               </span>
-            </button>
+            </div>
             <div className="pj-card__body">
               <p className="pj-card__cat">{p.category}</p>
               <h3 className="pj-card__title">{p.title}</h3>

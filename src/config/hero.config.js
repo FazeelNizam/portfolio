@@ -26,7 +26,7 @@ const heroConfig = {
      *  Use a cut-out (transparent background) PNG; brightness drives particle
      *  density/size/depth. Rebuild with `npm run images` after replacing src/img/dp.png,
      *  or point this at any other transparent PNG in /public. */
-    image: 'media/hero/portrait-particles.png',
+    image: 'media/hero/portrait-particles.webp',
     /** Alt text / accessible description of the portrait. */
     alt: 'Portrait of Fazeel Nizam drawn with glowing particles',
     /** Portrait height as a fraction of hero height. */

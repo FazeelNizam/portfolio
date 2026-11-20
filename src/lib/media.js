@@ -13,8 +13,8 @@ const PUBLIC = process.env.PUBLIC_URL || ''
 export function mediaKey(src) {
   if (!src || typeof src !== 'string') return null
   const base = src.split('/').pop().split('?')[0]
-  // strip webpack content hash: name.abcdef12.ext → name.ext
-  return base.replace(/\.[0-9a-f]{8}(\.[a-z0-9]+)$/i, '$1')
+  // strip the webpack content hash (CRA 5 uses 20 hex chars): name.<hash>.ext → name.ext
+  return base.replace(/\.[0-9a-f]{8,32}(\.[a-z0-9]+)$/i, '$1')
 }
 
 export function getMedia(src) {

@@ -18,7 +18,40 @@ async function drawFallbackPortrait(canvas, cfg) {
   canvas.height = h * dpr
   const ctx = canvas.getContext('2d')
   ctx.scale(dpr, dpr)
-  const n = 9000
+  // static black hole (same placement as the WebGL one)
+  const bh = cfg.blackHole
+  if (bh.enabled) {
+    const bx = bh.x * w
+    const by = bh.y * h
+    const r = bh.size * Math.min(w, h)
+    const glow = ctx.createRadialGradient(bx, by, r * 0.9, bx, by, r * 5)
+    glow.addColorStop(0, 'rgba(195,133,240,0.55)')
+    glow.addColorStop(0.35, 'rgba(146,0,250,0.22)')
+    glow.addColorStop(1, 'rgba(146,0,250,0)')
+    ctx.fillStyle = glow
+    ctx.fillRect(0, 0, w, h)
+    ctx.save()
+    ctx.translate(bx, by)
+    ctx.scale(1, bh.tilt)
+    const disk = ctx.createRadialGradient(0, 0, r * 1.3, 0, 0, r * 4.6)
+    disk.addColorStop(0, 'rgba(243,230,255,0.95)')
+    disk.addColorStop(0.3, 'rgba(195,133,240,0.7)')
+    disk.addColorStop(1, 'rgba(109,0,184,0)')
+    ctx.fillStyle = disk
+    ctx.beginPath()
+    ctx.arc(0, 0, r * 4.6, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.restore()
+    ctx.fillStyle = '#06000b'
+    ctx.beginPath()
+    ctx.arc(bx, by, r, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(243,230,255,0.85)'
+    ctx.lineWidth = Math.max(1.5, r * 0.06)
+    ctx.stroke()
+  }
+  ctx.globalCompositeOperation = 'lighter'
+  const n = 16000
   const { home, data, aspect } = await samplePortrait(`${process.env.PUBLIC_URL}/${cfg.portrait.image}`, n)
   let size = cfg.portrait.height * h
   size = Math.min(size, (w * 0.98) / aspect)
@@ -29,7 +62,7 @@ async function drawFallbackPortrait(canvas, cfg) {
     const l = data[i * 4]
     ctx.globalAlpha = 0.35 + 0.65 * l
     ctx.fillStyle = colors[Math.min(colors.length - 1, Math.floor(l * colors.length))]
-    const r = (0.5 + l) * 0.9
+    const r = (0.6 + l) * 1.1
     ctx.fillRect(cx + home[i * 3] * size - r / 2, cy - home[i * 3 + 1] * size - r / 2, r, r)
   }
 }

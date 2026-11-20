@@ -61,7 +61,11 @@ export function getDevice() {
   else {
     if (coarse || small) tier = 2
     if (cores <= 4 || mem <= 4) tier = Math.min(tier, 2)
-    if ((coarse && (cores <= 4 || mem <= 3)) || software || saveData) tier = 1
+    if ((coarse && (cores <= 4 || mem <= 3)) || saveData) tier = 1
+    // Software rasterisers (SwiftShader/llvmpipe: GPU blocklisted, VMs, remote
+    // desktops) run every WebGL frame on the CPU and block the main thread, so
+    // they get the static Canvas2D fallback instead of a stuttering animation.
+    if (software) tier = 0
   }
   // manual override for testing: ?quality=0..3
   const q = new URLSearchParams(window.location.search).get('quality')

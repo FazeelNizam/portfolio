@@ -294,10 +294,11 @@
   }
 }
 
+// transform + near-zero (not zero) opacity: text still counts as painted for LCP
 @keyframes hero-fade {
   from {
-    opacity: 0;
-    transform: translate3d(0, 12px, 0);
+    opacity: 0.02;
+    transform: translate3d(0, 14px, 0);
   }
 }
 
