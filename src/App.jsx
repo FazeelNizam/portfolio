@@ -1,95 +1,53 @@
-import React, { useState, useEffect } from 'react'
-import { quantum } from 'ldrs'
+import React, { Suspense, lazy, useEffect } from 'react'
 import './App.scss'
 import Navbar from './components/Navbar/Navbar'
 import Banner from './components/Banner/Banner'
-import About from './components/About/About'
-import Projects from './components/Projects/Projects'
-import Education from './components/Education/Education'
-import Experience from './components/Experience/Experience'
-import Footer from './components/Footer/Footer'
-import Lenis from 'lenis'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Medusae from './components/ui/medusae/Medusae'
+import SpaceCanvas from './components/Space/SpaceCanvas'
+import { initSmoothScroll, destroySmoothScroll } from './lib/smoothScroll'
 
-gsap.registerPlugin(ScrollTrigger)
+// Below-the-fold sections are code-split so the hero paints first.
+const About = lazy(() => import(/* webpackChunkName: "about" */ './components/About/About'))
+const Projects = lazy(() => import(/* webpackChunkName: "projects" */ './components/Projects/Projects'))
+const Experience = lazy(() => import(/* webpackChunkName: "experience" */ './components/Experience/Experience'))
+const Education = lazy(() => import(/* webpackChunkName: "education" */ './components/Education/Education'))
+const Footer = lazy(() => import(/* webpackChunkName: "footer" */ './components/Footer/Footer'))
 
-quantum.register()
+/** Reserves space while a section chunk loads (keeps anchors valid, avoids layout shift). */
+const Placeholder = ({ id }) => <section id={id} className="section" style={{ minHeight: '100svh' }} aria-busy="true" />
+
 const App = () => {
-  const [loading, setLoading] = useState(true)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 2000)
-    return () => clearTimeout(timer)
+    initSmoothScroll()
+    return destroySmoothScroll
   }, [])
 
-  useEffect(() => {
-    if (loading) return;
-
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-    })
-
-    function raf(time) {
-      lenis.raf(time)
-      requestAnimationFrame(raf)
-    }
-
-    requestAnimationFrame(raf)
-    
-    lenis.on('scroll', ScrollTrigger.update)
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
-    })
-
-    gsap.ticker.lagSmoothing(0)
-
-    return () => {
-      lenis.destroy()
-      gsap.ticker.remove(lenis.raf)
-    }
-  }, [loading])
-
   return (
-    <div>
-      {loading ? (
-        <div className="loader w-[100vw] h-[100vh] flex justify-center">
-          <l-quantum size="55" speed="1.8" color="#9200fa"></l-quantum>
-        </div>
-      ) : (
-    <>
+    <div className="app">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <SpaceCanvas />
       <Navbar />
-      <Banner />
-      <About />
-      <Projects />
-      
-      <div className="relative">
-        <div className="absolute inset-0 z-0">
-          <div className="sticky top-0 h-screen w-full overflow-hidden">
-            <Medusae />
-          </div>
-        </div>
-        <div className="relative z-10">
+      <main id="main" tabIndex={-1}>
+        <Banner />
+        <Suspense fallback={<Placeholder id="about" />}>
+          <About />
+        </Suspense>
+        <Suspense fallback={<Placeholder id="projects" />}>
+          <Projects />
+        </Suspense>
+        <Suspense fallback={<Placeholder id="experience" />}>
           <Experience />
+        </Suspense>
+        <Suspense fallback={<Placeholder id="education" />}>
           <Education />
-          <Footer />
-        </div>
-      </div>
-    </>
-      )}
+        </Suspense>
+      </main>
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   )
 }
-
-
 
 export default App
