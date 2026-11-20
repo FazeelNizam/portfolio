@@ -156,6 +156,14 @@ export default class HeroParticles {
   setTier(tier) {
     this.tier = tier
     if (!this.renderer) return
+    if (tier === 0) {
+      // too slow even at the lowest tier: finish the intro and switch to static frames
+      this.frozen = true
+      this.uniforms.uIntro.value = 1
+      this.uniforms.uIdle.value = 0
+      this.needsRender = true
+      return
+    }
     this.geometry.setDrawRange(0, Math.min(this.maxCount, this.counts[Math.max(1, tier)]))
     this.renderer.setPixelRatio(dprForTier(tier))
     this.uniforms.uPR.value = this.renderer.getPixelRatio()
@@ -214,6 +222,16 @@ export default class HeroParticles {
 
   update(dt) {
     if (!this.renderer || !this.active) return
+    if (this.frozen) {
+      if (!this.needsRender && this.scroll === this.lastScroll) return
+      this.lastScroll = this.scroll
+      this.uniforms.uDissolve.value = 0
+      this.canvas.style.opacity = String(1 - Math.min(1, this.scroll * 1.6))
+      this.renderer.render(this.scene, this.camera)
+      stats.hero++
+      this.needsRender = false
+      return
+    }
     const u = this.uniforms
     this.time += dt
     u.uTime.value = this.time

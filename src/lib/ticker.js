@@ -49,6 +49,7 @@ export const isHidden = () => hidden
 /* ------------------------------------------------------------------ */
 
 const LOW_FPS_MS = 1000 / 42 // sustained frames slower than ~42fps => step down
+const FLOOR_FPS_MS = 1000 / 22 // still below ~22fps at the lowest tier => freeze (static frames)
 const HIGH_FPS_MS = 1000 / 57 // sustained ~60fps => allowed one step back up
 
 const listeners = new Set()
@@ -57,8 +58,8 @@ export const quality = {
   ceiling: 0,
   tier: 0,
   ema: 16.7,
-  slowFrames: 0,
-  fastFrames: 0,
+  slowMs: 0,
+  fastMs: 0,
   upgrades: 0,
   active: 0, // number of WebGL layers currently rendering; we only judge while something renders
   history: [],
@@ -71,29 +72,32 @@ export const quality = {
   },
   _reset() {
     this.ema = 16.7
-    this.slowFrames = 0
-    this.fastFrames = 0
+    this.slowMs = 0
+    this.fastMs = 0
   },
   _sample(ms) {
-    // nothing to judge, or a hitch from tab switching / GC
-    if (!this.active || ms > 250) return
+    // nothing to judge, already frozen, or a hitch from tab switching / GC
+    if (!this.active || this.tier === 0 || ms > 250) return
     this.ema += (ms - this.ema) * 0.08
-    if (this.ema > LOW_FPS_MS) this.slowFrames++
-    else this.slowFrames = Math.max(0, this.slowFrames - 2)
-    if (this.tier > 1 && this.slowFrames > 90) this.set(this.tier - 1, 'low fps')
-    else this._maybeUpgrade()
+    // time-based (not frame-based) so a 10fps device reacts as fast as a 40fps one
+    const limit = this.tier > 1 ? LOW_FPS_MS : FLOOR_FPS_MS
+    if (this.ema > limit) this.slowMs += ms
+    else this.slowMs = Math.max(0, this.slowMs - ms * 2)
+    if (this.tier > 1 && this.slowMs > 1500) this.set(this.tier - 1, 'low fps')
+    else if (this.tier === 1 && this.slowMs > 2500) this.set(0, 'very low fps: static frames')
+    else this._maybeUpgrade(ms)
   },
-  _maybeUpgrade() {
+  _maybeUpgrade(ms) {
     if (this.upgrades >= 1 || this.tier >= this.ceiling) return
-    if (this.ema < HIGH_FPS_MS) this.fastFrames++
-    else this.fastFrames = 0
-    if (this.fastFrames > 600) {
+    if (this.ema < HIGH_FPS_MS) this.fastMs += ms
+    else this.fastMs = 0
+    if (this.fastMs > 8000) {
       this.upgrades++
       this.set(this.tier + 1, 'headroom')
     }
   },
   set(tier, reason) {
-    tier = Math.max(1, Math.min(this.ceiling, tier))
+    tier = Math.max(0, Math.min(this.ceiling, tier))
     if (tier === this.tier) return
     this.tier = tier
     this._reset()

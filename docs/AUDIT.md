@@ -142,9 +142,9 @@ production build served under `/portfolio/`. "Before" is the live site.
 | | Perf | A11y | Best practices | SEO | FCP | LCP | TBT | CLS | Transfer |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **Before — mobile** | 34 | 84 | 96 | 100 | 3.0 s | 8.0 s | 3 100 ms | 0 | 6 481 KiB |
-| **After — mobile** | 98 | 100 | 100 | 100 | 1.2 s | 2.4 s | 70 ms | 0 | 367 KiB |
+| **After — mobile** | 98 | 100 | 100 | 100 | 1.2 s | 2.4 s | 60 ms | 0.006 | 348 KiB |
 | **Before — desktop** | 81 | 84 | 96 | 100 | 1.4 s | 1.9 s | 70 ms | 0 | 6 482 KiB |
-| **After — desktop** | 100 | 100 | 100 | 100 | 0.3 s | 0.6 s | 0 ms | 0.005 | 615 KiB |
+| **After — desktop** | 100 | 100 | 100 | 100 | 0.3 s | 0.6 s | 0 ms | 0.005 | 639 KiB |
 
 **Important caveat:** headless Lighthouse renders WebGL with SwiftShader (a CPU
 rasteriser). The site deliberately treats software GL as tier 0 (static Canvas2D
@@ -152,14 +152,61 @@ fallback), because every WebGL frame on a software rasteriser blocks the main th
 the table above measures the *fallback* path. With the WebGL path forced (`?quality=…`) under
 the same software renderer:
 
-WEBGL_TABLE
+| Forced tier | Mobile perf | Mobile TBT | Desktop perf | Desktop TBT |
+| --- | --- | --- | --- | --- |
+| `?quality=1` (22k particles) | 68 | 2 980 ms | 60 | 8 390 ms |
+| `?quality=3` (120k particles) | 58 | 41 s | 60 | 12 s |
+
+These numbers are CPU rasterisation cost: SwiftShader draws every pixel of every WebGL frame on the
+main machine's CPU. They are the reason software GL gets the static tier.
 
 On real GPUs the per-frame cost is a few milliseconds. The frame-rate measurements below
 cover that path.
 
 ### Frame rate & adaptive quality
 
-FPS_TABLE
+Playwright + CDP `Emulation.setCPUThrottlingRate`, SwiftShader WebGL (so these are
+worst-case numbers; GPU work runs on the CPU too). FPS is sampled for 3 s, right after load and
+again 9 s later.
+
+| Scenario | FPS after load | FPS ~12 s later | Worst frame | Tier steps |
+| --- | --- | --- | --- | --- |
+| Desktop 1440, no throttle, start tier 3 | 22 | 24 | 100 ms | 3 → 2 @2.2 s → 1 @3.8 s |
+| Desktop 1440, **4× CPU**, start tier 3 | 7 | **60** | 33 ms | 3 → 2 @3.9 s → 1 @6.3 s → 0 (static) @9.7 s |
+| Desktop 1440, **6× CPU**, start tier 3 | 7 | **58** | 67 ms | 3 → 2 @4.8 s → 1 @7.3 s → 0 (static) @11.0 s |
+| Mobile 390, **4× CPU**, start tier 2 | 33 | 35 | 67 ms | 2 → 1 @3.0 s |
+| Static fallback (tier 0), **6× CPU** | 32 | 42 | 67 ms | — |
+
+Adaptive quality is time-based: about 1.5 s below ~42 fps steps down one tier. At the
+lowest tier, 2.5 s below ~22 fps switches to static frames (rendered only on
+scroll/resize), with no reload or flash. Every quality change only shrinks draw ranges or
+pixel ratio; nothing is re-uploaded.
+
+### Verified behaviour (Playwright, `/tmp`-only e2e script, 26/26 passing)
+
+- The hero stops rendering when scrolled off-screen (frame counter unchanged); the projects
+  carousel renders only while visible.
+- Hidden tab (Page Visibility API): background, hero and carousel frame counters freeze, and
+  resume when the tab is visible again.
+- Carousel: ← / → / Enter, mouse drag, details dialog with focus trap, Esc closes and returns focus.
+- Gallery: 28 items laid out in ~40 ms with no image preload; AVIF/WebP variants served;
+  filter + FLIP; lightbox ←/→/Esc.
+- Timeline: keyboard and year-rail navigation; nav scroll-spy follows sections.
+- Mobile menu opens, traps focus, closes on Esc, and its links land on the section.
+- `prefers-reduced-motion`: no continuous rendering, 2D project cards.
+- No page errors on desktop, mobile or reduced motion; production build under `/portfolio/`.
+- No horizontal overflow at 360 / 390 / 768 / 1024 / 1440 / 1920 (checked for every element,
+  ignoring intentional horizontal scrollers); every interactive target ≥ 44 px.
+
+### Not verified here
+
+- **Firefox and WebKit**: only Chromium is installed in this environment, and the Playwright
+  browser downloads (cdn.playwright.dev) are blocked by its network policy. The code avoids
+  Chromium-only APIs or feature-detects them (`requestIdleCallback`, `inert`,
+  `backdrop-filter` with an `@supports` fallback, WebGL1-compatible GLSL). It still needs a manual
+  pass in Firefox and Safari.
+- **Real GPUs / phones**: every number above is from a CPU rasteriser. Please check on a real
+  low-end phone; `?quality=1` forces the low tier if you want to compare.
 
 ### Bundle
 

@@ -221,6 +221,10 @@ export default class SpaceBackground {
 
   setTier(tier, force) {
     if (!this.renderer || (!force && tier === this.tier)) return
+    // tier 0 at runtime = too slow even at the lowest settings: keep the lowest
+    // settings but only render static frames (on scroll/resize), like reduced motion
+    this.frozen = tier === 0
+    if (this.frozen) this.dirty = true
     const prev = this.tier
     this.tier = Math.max(1, tier)
     this.renderer.setPixelRatio(dprForTier(this.tier))
@@ -305,9 +309,10 @@ export default class SpaceBackground {
       if (v.isActive()) viewsActive = true
     })
     // low tier: background at 30fps unless an interactive view is on screen
-    if (!this.reduced) this.time += dt
+    const still = this.reduced || this.frozen
+    if (!still) this.time += dt
     if (this.tier <= 1 && !viewsActive && !this.dirty && this.frame % 2 === 1) return
-    if (this.reduced && !this.dirty && !viewsActive) return
+    if (still && !this.dirty && !viewsActive) return
 
     const r = this.renderer
     const pr = r.getPixelRatio()
@@ -342,7 +347,7 @@ export default class SpaceBackground {
       const visible = Math.min(bottom, this.h) - Math.max(top, 0)
       target = Math.max(0, Math.min(1, visible / (this.h * 0.6)))
     }
-    m.opacity += (target - m.opacity) * Math.min(1, dt * 3 || 1)
+    m.opacity += (target - m.opacity) * (still ? 1 : Math.min(1, dt * 3 || 1))
     if (m.opacity > 0.01) {
       if (!m.grid) this.buildMedusaeGrid(...MEDUSAE_GRID[this.tier])
       this.updateMedusae(dt)
