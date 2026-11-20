@@ -1,143 +1,137 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { FaBehance } from "react-icons/fa";
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import "./DesignGallery.scss";
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { FaBehance } from 'react-icons/fa'
+import { getMedia, ResponsivePicture } from '../../lib/media'
+import { prefersReducedMotion } from '../../lib/device'
+import Lightbox from './Lightbox'
+import './DesignGallery.scss'
 
-gsap.registerPlugin(ScrollTrigger);
+/*
+ * Arrangement algorithm — unchanged from the original:
+ *   1. classify each design by aspect ratio (> 1.3 landscape → spans 2 columns,
+ *      < 0.75 portrait → spans 2 rows, otherwise square),
+ *   2. Fisher–Yates shuffle,
+ *   3. CSS grid with `grid-auto-flow: dense` packs them.
+ *
+ * What changed is *when* the ratio is known. Before, every full-size PNG
+ * (~20 MB total) had to download and decode before the grid could render at all,
+ * behind a spinner. Now ratios come from the build-time manifest, so the layout
+ * is computed synchronously on first render (memoised), with intrinsic sizes and
+ * LQIP placeholders reserving space while optimised images stream in lazily.
+ */
+const classify = (ratio) => (ratio > 1.3 ? 'landscape' : ratio < 0.75 ? 'portrait' : 'square')
 
-const DesignCard = ({ design, onImageClick }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className={`design-card ${design.aspectClass || "square"}`}
-      onClick={() => onImageClick(design)}
-    >
-      <img
-        src={typeof design.image === 'string' ? design.image : (design.image.src || design.image)}
-        alt={design.title}
-        className="design-img"
-        loading="lazy"
-      />
-      
-      <div className="design-overlay">
-        <div className="category-label">{design.category}</div>
-        
-        <h3 className="design-title">{design.title}</h3>
-        
-        {design.tools && (
-          <div className="tools-list">
-            {design.tools.map((tool, i) => (
-              <span key={i} className="tool-pill">
-                {tool}
-              </span>
-            ))}
-          </div>
-        )}
+function shuffle(array) {
+  const a = [...array]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
 
-        <div className="shimmer-separator" />
+const SIZES = {
+  landscape: '(min-width: 1024px) 66vw, (min-width: 768px) 100vw, 100vw',
+  portrait: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw',
+  square: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw',
+}
 
-        {design.behanceUrl && (
-          <a
-            href={design.behanceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="behance-link"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <FaBehance />
-            <span>View on Behance</span>
-          </a>
-        )}
-      </div>
-    </motion.div>
-  );
-};
-
-const DesignGallery = ({ designs, onImageClick }) => {
-  const [shuffledDesigns, setShuffledDesigns] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(true);
-    
-    const shuffle = (array) => {
-      const newArray = [...array];
-      for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-      }
-      return newArray;
-    };
-
-    const loadRatios = async () => {
-      const projectsWithRatios = await Promise.all(
-        designs.map((design) => {
-          return new Promise((resolve) => {
-            const img = new Image();
-            const imgSrc = typeof design.image === 'string' ? design.image : (design.image.src || design.image);
-            img.src = imgSrc;
-            img.onload = () => {
-              const ratio = img.naturalWidth / img.naturalHeight;
-              let aspectClass = "square";
-              if (ratio > 1.3) aspectClass = "landscape";
-              else if (ratio < 0.75) aspectClass = "portrait";
-              resolve({ ...design, aspectClass });
-            };
-            img.onerror = () => resolve({ ...design, aspectClass: "square" });
-          });
+const DesignGallery = ({ designs }) => {
+  // computed once per mount — no async work, no spinner, no ScrollTrigger refresh hack
+  const arranged = useMemo(
+    () =>
+      shuffle(
+        designs.map((d) => {
+          const m = getMedia(d.image)
+          return { ...d, ratio: m ? m.ratio : 1, aspectClass: classify(m ? m.ratio : 1) }
         })
-      );
+      ),
+    [designs]
+  )
+  const categories = useMemo(() => ['All', ...Array.from(new Set(designs.map((d) => d.category)))], [designs])
+  const [filter, setFilter] = useState('All')
+  const visible = useMemo(() => (filter === 'All' ? arranged : arranged.filter((d) => d.category === filter)), [arranged, filter])
+  const [lightbox, setLightbox] = useState(null) // { index, rect }
 
-      setShuffledDesigns(shuffle(projectsWithRatios));
-      setIsLoading(false);
-      
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 500);
-    };
-
-    loadRatios();
-  }, [designs]);
+  // FLIP: animate cards from their old grid slot to the new one (transform/opacity only)
+  const gridRef = useRef(null)
+  const rects = useRef(new Map())
+  const snapshot = () => {
+    const map = new Map()
+    gridRef.current.querySelectorAll('[data-flip]').forEach((el) => map.set(el.dataset.flip, el.getBoundingClientRect()))
+    rects.current = map
+  }
+  const changeFilter = (c) => {
+    if (c === filter) return
+    snapshot()
+    setFilter(c)
+  }
+  useLayoutEffect(() => {
+    const prev = rects.current
+    if (!prev.size || prefersReducedMotion()) return
+    rects.current = new Map()
+    const els = [...gridRef.current.querySelectorAll('[data-flip]')]
+    const next = els.map((el) => el.getBoundingClientRect()) // batch reads
+    els.forEach((el, i) => {
+      // then writes
+      const before = prev.get(el.dataset.flip)
+      const after = next[i]
+      const delay = Math.min(i * 18, 160)
+      if (before) {
+        const dx = before.left - after.left
+        const dy = before.top - after.top
+        const sx = before.width / after.width
+        const sy = before.height / after.height
+        if (Math.abs(dx) + Math.abs(dy) < 1 && Math.abs(sx - 1) < 0.01 && Math.abs(sy - 1) < 0.01) return
+        el.animate(
+          [{ transformOrigin: '0 0', transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` }, { transformOrigin: '0 0', transform: 'none' }],
+          { duration: 420, delay, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'backwards' }
+        )
+      } else {
+        el.animate([{ opacity: 0, transform: 'scale(0.94)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'backwards' })
+      }
+    })
+  }, [visible])
 
   return (
-    <div className="w-full py-12 px-4 md:px-8 min-h-[500px] flex items-center justify-center">
-      <AnimatePresence mode="wait">
-        {isLoading ? (
-          <motion.div
-            key="loader"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col items-center gap-6"
-          >
-            <l-quantum size="45" speed="1.8" color="#9200fa"></l-quantum>
-            {/* <span className="text-xs text-[#9200fa] tracking-[0.3em] uppercase font-bold opacity-80">Curating Gallery</span> */}
-          </motion.div>
-        ) : (
-          <motion.div 
-            key="grid"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="design-gallery-grid w-full"
-          >
-            {shuffledDesigns.map((design) => (
-              <DesignCard 
-                key={design.id} 
-                design={design} 
-                onImageClick={onImageClick} 
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
+    <div className="gallery">
+      <div className="gallery__filters" role="toolbar" aria-label="Filter designs by category">
+        {categories.map((c) => (
+          <button key={c} type="button" className={`gallery__filter${c === filter ? ' is-active' : ''}`} aria-pressed={c === filter} onClick={() => changeFilter(c)}>
+            {c}
+            <span className="gallery__filter-count">{c === 'All' ? designs.length : designs.filter((d) => d.category === c).length}</span>
+          </button>
+        ))}
+      </div>
 
-export default DesignGallery;
+      <ul className="gallery__grid" ref={gridRef} aria-label="Design works">
+        {visible.map((d, i) => (
+          <li key={d.id} data-flip={d.id} className={`gallery__item gallery__item--${d.aspectClass}`} style={{ '--ratio': d.ratio }}>
+            <button
+              type="button"
+              className="gallery__card"
+              onClick={(e) => setLightbox({ index: i, rect: e.currentTarget.querySelector('img').getBoundingClientRect() })}
+              aria-label={`${d.title} — open image`}
+            >
+              <ResponsivePicture src={d.image} alt={d.title} sizes={SIZES[d.aspectClass]} className="gallery__pic" />
+              <span className="gallery__overlay" aria-hidden="true">
+                <span className="gallery__cat">{d.category}</span>
+                <span className="gallery__title">{d.title}</span>
+                {d.tools && <span className="gallery__tools">{d.tools.join(' · ')}</span>}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <p className="gallery__more">
+        <a className="btn btn--ghost" href="https://www.behance.net/fazeelnizam/projects" target="_blank" rel="noopener noreferrer">
+          <FaBehance aria-hidden="true" /> More on Behance
+        </a>
+      </p>
+
+      {lightbox && <Lightbox items={visible} start={lightbox.index} originRect={lightbox.rect} onClose={() => setLightbox(null)} />}
+    </div>
+  )
+}
+
+export default DesignGallery

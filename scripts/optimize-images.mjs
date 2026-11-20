@@ -127,5 +127,10 @@ for (const [group, cfg] of Object.entries(groups)) {
   }
 }
 await buildPortrait()
+// heavy decorative SVGs (embedded rasters) used in the About bento → small WebP
+await fs.mkdir(path.join(pub, 'decor'), { recursive: true })
+for (const [file, w] of [['b5.svg', 700]]) {
+  await sharp(path.join(srcImg, file), { density: 144 }).resize({ width: w }).webp({ quality: 72 }).toFile(path.join(pub, 'decor', file.replace('.svg', '.webp')))
+}
 await fs.writeFile(path.join(root, 'src/data/media-manifest.json'), JSON.stringify(manifest, null, 1) + '\n')
 console.log(`\n${Object.keys(manifest).length} images -> public/media, manifest -> src/data/media-manifest.json`)

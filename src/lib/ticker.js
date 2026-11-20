@@ -1,30 +1,36 @@
 /**
  * One animation loop for the whole site.
  *
- * Lenis, ScrollTrigger, the WebGL renderers and the adaptive-quality monitor all
- * hang off gsap.ticker (a single requestAnimationFrame). Browsers already stop rAF
- * in hidden tabs; subscribers additionally get `hidden` so they can skip work and
- * reset their clocks when the tab comes back.
+ * Lenis, the WebGL renderers, scroll-linked CSS variables and the adaptive-quality
+ * monitor all hang off a single requestAnimationFrame. (This used to be
+ * gsap.ticker; nothing else needed GSAP, so dropping it removed ~45 KB gzip from
+ * the initial bundle.) Browsers already pause rAF in hidden tabs; we also skip
+ * work while `document.hidden` and clamp the first delta after returning.
  */
-import gsap from 'gsap'
 import { getDevice } from './device'
 
 const subs = new Set()
 let started = false
 let hidden = typeof document !== 'undefined' ? document.hidden : false
 
-function tick(time, deltaMs) {
+let last = 0
+
+function tick(now) {
+  requestAnimationFrame(tick)
+  const deltaMs = last ? now - last : 16.7
+  last = now
   if (hidden) return
   const dt = Math.min(deltaMs, 100) / 1000 // clamp: a stalled frame must not explode simulations
-  subs.forEach((fn) => fn(time, dt))
+  subs.forEach((fn) => fn(now, dt))
 }
 
 function start() {
-  if (started) return
+  if (started || typeof window === 'undefined') return
   started = true
-  gsap.ticker.add(tick)
+  requestAnimationFrame(tick)
   document.addEventListener('visibilitychange', () => {
     hidden = document.hidden
+    last = 0
     quality._reset()
   })
 }

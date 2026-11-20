@@ -7,7 +7,6 @@ import { scrollToTarget } from '../../lib/smoothScroll'
 import { FaArrowDown, FaDownload } from 'react-icons/fa'
 import CV from '../../cv/Fazeel Nizam - CV.pdf'
 
-const COUNTS_KEY = ['', 'low', 'medium', 'high']
 
 /** Static dotted portrait for browsers without WebGL. */
 async function drawFallbackPortrait(canvas, cfg) {

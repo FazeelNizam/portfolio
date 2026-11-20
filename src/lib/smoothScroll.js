@@ -1,5 +1,5 @@
 /**
- * Smooth scrolling (Lenis) wired into the single gsap ticker.
+ * Smooth scrolling (Lenis) driven by the site's single rAF loop (lib/ticker).
  *
  * - Disabled for reduced-motion users and on touch devices (native momentum
  *   scrolling is better there and avoids input latency).
@@ -7,14 +7,11 @@
  *   gsap ticker, which advanced it twice per frame (jittery scroll). Fixed here.
  */
 import Lenis from 'lenis'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { prefersReducedMotion, isCoarsePointer } from './device'
-
-gsap.registerPlugin(ScrollTrigger)
+import { onFrame } from './ticker'
 
 let lenis = null
-let rafFn = null
+let stop = null
 
 export function initSmoothScroll() {
   if (lenis || prefersReducedMotion() || isCoarsePointer()) return null
@@ -24,16 +21,13 @@ export function initSmoothScroll() {
     smoothWheel: true,
     wheelMultiplier: 1,
   })
-  lenis.on('scroll', ScrollTrigger.update)
-  rafFn = (time) => lenis.raf(time * 1000)
-  gsap.ticker.add(rafFn)
-  gsap.ticker.lagSmoothing(0)
+  stop = onFrame((time) => lenis.raf(time))
   return lenis
 }
 
 export function destroySmoothScroll() {
   if (!lenis) return
-  gsap.ticker.remove(rafFn)
+  stop()
   lenis.destroy()
   lenis = null
 }

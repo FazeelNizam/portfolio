@@ -417,3 +417,28 @@ main {
     transform: none;
   }
 }
+
+/* Responsive picture with blurred LQIP placeholder */
+.rpic {
+  display: block;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    &.is-loaded {
+      opacity: 1;
+    }
+  }
+}
+
+.pj-pills {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
