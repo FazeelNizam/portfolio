@@ -4,14 +4,14 @@ import {
   contactCard
 } from '../../data/data'
 import { animate } from 'animejs'
+import { scrollToTarget } from '../../lib/smoothScroll'
+import { prefersReducedMotion } from '../../lib/device'
 
 const Footer = () => {
 
   const scrollToSection = (e, sectionId) => {
-    const element = document.querySelector(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToTarget(sectionId === '#home' ? 0 : sectionId);
+    if (prefersReducedMotion()) return;
     
     // Particle burst effect
     const button = e.currentTarget;
@@ -64,12 +64,14 @@ const Footer = () => {
             <div className="socialLinks">
               {contactCard.map((card) => (
                 <a
+                  key={card.text}
+                  aria-label={card.text}
                   href={card.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="socialLink"
                 >
-                  <span className="socialIcon">{card.svg}</span>
+                  <span className="socialIcon" aria-hidden="true">{card.svg}</span>
                   {/* <p>{card.text}</p> */}
                 </a>
               ))}
@@ -77,15 +79,17 @@ const Footer = () => {
 
           {/* Copyright */}
           <div className="copyright">
-            <p>&copy; 2025 Fazeel Nizam. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Fazeel Nizam. All rights reserved.</p>
           </div>
 
           {/* Scroll to Top Button */}
-          <button 
+          <button
+            type="button"
+            aria-label="Back to top"
             className="scrollToTop"
             onClick={(e) => scrollToSection(e, '#home')}
           >
-            ↑
+            <span aria-hidden="true">↑</span>
           </button>
         </div>
       </footer>

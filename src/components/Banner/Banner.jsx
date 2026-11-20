@@ -1,153 +1,335 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import './Banner.scss'
-import { motion } from 'framer-motion'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { FlipWords } from '../ui/flip-words'
+import { resolveHeroConfig } from '../../config/hero.config'
+import { getDevice, prefersReducedMotion } from '../../lib/device'
+import { onFrame, quality } from '../../lib/ticker'
+import { scrollToTarget } from '../../lib/smoothScroll'
+import { FaArrowDown, FaDownload } from 'react-icons/fa'
+import CV from '../../cv/Fazeel Nizam - CV.pdf'
 
-import Hero1 from '../../img/Hero/hero_f.png'
-import Hero3 from '../../img/Hero/l.png'
-import Hero4 from '../../img/Hero/r.png'
 
-gsap.registerPlugin(ScrollTrigger)
+/** Static dotted portrait for browsers without WebGL. */
+async function drawFallbackPortrait(canvas, cfg) {
+  const { samplePortrait } = await import('../../three/portraitSampler')
+  const w = canvas.clientWidth
+  const h = canvas.clientHeight
+  const dpr = Math.min(window.devicePixelRatio || 1, 2)
+  canvas.width = w * dpr
+  canvas.height = h * dpr
+  const ctx = canvas.getContext('2d')
+  ctx.scale(dpr, dpr)
+  // static black hole (same placement as the WebGL one)
+  const bh = cfg.blackHole
+  if (bh.enabled) {
+    const bx = bh.x * w
+    const by = bh.y * h
+    const r = bh.size * Math.min(w, h)
+    const glow = ctx.createRadialGradient(bx, by, r * 0.9, bx, by, r * 5)
+    glow.addColorStop(0, 'rgba(195,133,240,0.55)')
+    glow.addColorStop(0.35, 'rgba(146,0,250,0.22)')
+    glow.addColorStop(1, 'rgba(146,0,250,0)')
+    ctx.fillStyle = glow
+    ctx.fillRect(0, 0, w, h)
+    ctx.save()
+    ctx.translate(bx, by)
+    ctx.scale(1, bh.tilt)
+    const disk = ctx.createRadialGradient(0, 0, r * 1.3, 0, 0, r * 4.6)
+    disk.addColorStop(0, 'rgba(243,230,255,0.95)')
+    disk.addColorStop(0.3, 'rgba(195,133,240,0.7)')
+    disk.addColorStop(1, 'rgba(109,0,184,0)')
+    ctx.fillStyle = disk
+    ctx.beginPath()
+    ctx.arc(0, 0, r * 4.6, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.restore()
+    ctx.fillStyle = '#06000b'
+    ctx.beginPath()
+    ctx.arc(bx, by, r, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(243,230,255,0.85)'
+    ctx.lineWidth = Math.max(1.5, r * 0.06)
+    ctx.stroke()
+  }
+  ctx.globalCompositeOperation = 'lighter'
+  const n = 16000
+  const { home, data, aspect } = await samplePortrait(`${process.env.PUBLIC_URL}/${cfg.portrait.image}`, n)
+  let size = cfg.portrait.height * h
+  size = Math.min(size, (w * 0.98) / aspect)
+  const cx = cfg.portrait.x * w
+  const cy = cfg.portrait.bottom * h - size / 2
+  const colors = cfg.particles.colors
+  for (let i = 0; i < n; i++) {
+    const l = data[i * 4]
+    ctx.globalAlpha = 0.35 + 0.65 * l
+    ctx.fillStyle = colors[Math.min(colors.length - 1, Math.floor(l * colors.length))]
+    const r = (0.6 + l) * 1.1
+    ctx.fillRect(cx + home[i * 3] * size - r / 2, cy - home[i * 3 + 1] * size - r / 2, r, r)
+  }
+}
 
 const Banner = () => {
-  const containerRef = useRef()
-  const skyRef = useRef()
-  const backRef = useRef()
-  const mid1Ref = useRef()
-  const mid2Ref = useRef()
-  const textRef = useRef()
-  const text2Ref = useRef()
+  const sectionRef = useRef(null)
+  const canvasRef = useRef(null)
+  const fallbackRef = useRef(null)
+  const [cfg, setCfg] = useState(() => resolveHeroConfig())
+  const [roleIndex, setRoleIndex] = useState(0)
+  const [glReady, setGlReady] = useState(false)
+  const reduced = useMemo(() => prefersReducedMotion(), [])
 
-  const words = [
-    'Computer Engineer',
-    'Embedded System Engineer',
-    'Software Engineer',
-    'Fullstack Developer',
-    'AI Engineer',
-    'Graphic Designer',
-  ]
+  // responsive config (mobile / tablet overrides)
+  useEffect(() => {
+    let w = window.innerWidth
+    const onResize = () => {
+      const nw = window.innerWidth
+      if ((nw <= 640) !== (w <= 640) || (nw < 1024) !== (w < 1024)) setCfg(resolveHeroConfig(nw))
+      w = nw
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1, // Add a tiny bit of smoothing to the parallax itself
+  // rotating role line
+  useEffect(() => {
+    if (reduced) return
+    const id = setInterval(() => setRoleIndex((i) => (i + 1) % cfg.name.roles.length), cfg.name.roleInterval * 1000)
+    return () => clearInterval(id)
+  }, [cfg.name.roles.length, cfg.name.roleInterval, reduced])
+
+  // scroll-linked progress → CSS var (name parallax) ; only while the hero is visible
+  const particlesRef = useRef(null)
+  const visibleRef = useRef(true)
+  useEffect(() => {
+    const el = sectionRef.current
+    let last = -1
+    return onFrame(() => {
+      if (!visibleRef.current) return
+      const h = el.offsetHeight || 1
+      const p = Math.min(1, Math.max(0, window.scrollY / h))
+      if (Math.abs(p - last) > 0.0005) {
+        el.style.setProperty('--hp', p.toFixed(4))
+        last = p
+      }
+      const parts = particlesRef.current
+      if (parts) {
+        parts.setScroll(p)
+        const bh = cfg.blackHole
+        const vw = window.innerWidth
+        const vh = window.innerHeight
+        parts.setBlackHole(bh.x * vw, bh.y * vh + window.scrollY * (1 - bh.parallax))
       }
     })
+  }, [cfg])
 
-    tl.to(skyRef.current, { xPercent: 15, ease: 'none', force3D: true }, 0)
-    tl.to(backRef.current, { yPercent: 90, ease: 'none', force3D: true }, 0)
-    tl.to(mid1Ref.current, { yPercent: 70, ease: 'none', force3D: true }, 0)
-    tl.to(mid2Ref.current, { yPercent: 80, ease: 'none', force3D: true }, 0)
-    tl.to(textRef.current, { yPercent: 500, ease: 'none', force3D: true }, 0)
-    tl.to(text2Ref.current, { yPercent: 1900, ease: 'none', force3D: true }, 0)
-  }, { scope: containerRef })
+  // particle portrait (three.js loaded lazily, after first paint)
+  useEffect(() => {
+    const canvas = canvasRef.current
+    const section = sectionRef.current
+    const device = getDevice()
+    quality.init()
+    if (!device.webgl || device.tier === 0) {
+      drawFallbackPortrait(fallbackRef.current, cfg).catch(() => {})
+      return
+    }
+    let parts = null
+    let disposed = false
+    const cleanups = []
+    const counts = { 1: cfg.particles.count.low, 2: cfg.particles.count.medium, 3: cfg.particles.count.high }
 
-  const floatingAnimationRight = {
-    y: [0, -10, 0],
-    transition: {
-      duration: 2,
-      ease: 'easeInOut',
-      repeat: Infinity,
-      repeatType: 'loop',
-    },
-  }
+    const start = async () => {
+      const { default: HeroParticles } = await import(/* webpackChunkName: "three-hero" */ '../../three/HeroParticles')
+      if (disposed) return
+      parts = new HeroParticles({ canvas, config: cfg, tier: quality.tier, reducedMotion: reduced, counts })
+      try {
+        await parts.init()
+      } catch (e) {
+        parts = null
+        drawFallbackPortrait(fallbackRef.current, cfg).catch(() => {})
+        return
+      }
+      if (disposed) {
+        parts.dispose()
+        return
+      }
+      particlesRef.current = parts
+      setGlReady(true)
+      quality.active++
+      let counted = true
 
-  const floatingAnimationLeft = {
-    y: [0, -15, 0],
-    transition: {
-      duration: 3,
-      ease: 'easeInOut',
-      repeat: Infinity,
-      repeatType: 'loop',
-    },
+      const ro = new ResizeObserver(() => parts.resize(canvas.clientWidth, canvas.clientHeight))
+      ro.observe(canvas)
+      cleanups.push(() => ro.disconnect())
+      cleanups.push(quality.subscribe((t) => parts.setTier(t)))
+
+      // pause when the hero is off-screen
+      const io = new IntersectionObserver(([e]) => {
+        visibleRef.current = e.isIntersecting
+        parts.active = e.isIntersecting
+        if (e.isIntersecting && !counted) {
+          quality.active++
+          counted = true
+        } else if (!e.isIntersecting && counted) {
+          quality.active--
+          counted = false
+        }
+      })
+      io.observe(section)
+      cleanups.push(() => {
+        io.disconnect()
+        if (counted) quality.active--
+      })
+
+      // pointer + touch (touch events keep firing while the page pans)
+      const local = (x, y) => {
+        const r = canvas.getBoundingClientRect()
+        parts.pointerMove(x - r.left, y - r.top, performance.now())
+      }
+      const onMove = (e) => {
+        if (e.pointerType === 'touch') return
+        local(e.clientX, e.clientY)
+      }
+      const onTouch = (e) => {
+        const t = e.touches[0]
+        if (t) local(t.clientX, t.clientY)
+      }
+      const onLeave = () => parts.pointerLeave()
+      section.addEventListener('pointermove', onMove, { passive: true })
+      section.addEventListener('pointerleave', onLeave)
+      section.addEventListener('touchstart', onTouch, { passive: true })
+      section.addEventListener('touchmove', onTouch, { passive: true })
+      section.addEventListener('touchend', onLeave, { passive: true })
+      cleanups.push(() => {
+        section.removeEventListener('pointermove', onMove)
+        section.removeEventListener('pointerleave', onLeave)
+        section.removeEventListener('touchstart', onTouch)
+        section.removeEventListener('touchmove', onTouch)
+        section.removeEventListener('touchend', onLeave)
+      })
+
+      if (reduced) {
+        // static: render on demand only
+        parts.renderOnce()
+        const onScroll = () => {
+          if (!visibleRef.current) return
+          parts.setScroll(Math.min(1, window.scrollY / (section.offsetHeight || 1)))
+          parts.renderOnce()
+        }
+        window.addEventListener('scroll', onScroll, { passive: true })
+        cleanups.push(() => window.removeEventListener('scroll', onScroll))
+        const ro2 = new ResizeObserver(() => parts.renderOnce())
+        ro2.observe(canvas)
+        cleanups.push(() => ro2.disconnect())
+      } else {
+        cleanups.push(onFrame((t, dt) => parts.update(dt)))
+      }
+    }
+
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200))
+    const handle = idle(() => start(), { timeout: 900 })
+    return () => {
+      disposed = true
+      ;(window.cancelIdleCallback || clearTimeout)(handle)
+      cleanups.forEach((fn) => fn())
+      particlesRef.current = null
+      if (parts) parts.dispose()
+    }
+    // the config object only changes across breakpoints; particles take it via setConfig
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reduced])
+
+  useEffect(() => {
+    if (particlesRef.current) particlesRef.current.setConfig(cfg)
+  }, [cfg])
+
+  const n = cfg.name
+  const fullName = n.words.join(' ')
+  let letterIndex = 0
+  const styleFor = (wi) => {
+    if (n.style === 'outline') return 'outline'
+    if (n.style === 'fill') return 'fill'
+    return wi === 0 ? 'outline' : 'fill'
   }
 
   return (
-    <section id="home" ref={containerRef} className="wrapper">
-      <div ref={skyRef} className="sky-container">
-        <div className="star1"></div>
-        <div className="star2"></div>
-        <div className="star3"></div>
+    <section
+      id="home"
+      ref={sectionRef}
+      className={`hero hero--name-${n.layer} hero--anim-${n.animation}${reduced ? ' hero--reduced' : ''}${glReady ? ' hero--gl' : ''}`}
+      style={{
+        '--name-font': n.font,
+        '--name-size': n.size,
+        '--name-y': `${n.y * 100}%`,
+        '--name-speed': n.speed,
+        '--name-parallax': n.scrollParallax,
+      }}
+      aria-labelledby="hero-title"
+    >
+      <div className="hero__name-layer">
+        <p className="hero__kicker" aria-hidden="true">
+          {n.kicker}
+        </p>
+        <h1 id="hero-title" className="hero__name">
+          <span className="sr-only">
+            {n.kicker} {fullName}
+          </span>
+          <span className="hero__name-visual" aria-hidden="true">
+            {n.words.map((word, wi) => (
+              <span key={word + wi} className={`hero__word hero__word--${styleFor(wi)}`}>
+                {word.split('').map((ch) => {
+                  const i = letterIndex++
+                  const drift = ((i % 3) - 1) * 0.6 + (i % 2 ? 1 : 0.4)
+                  return (
+                    <span key={i} className="hero__letter-wrap" style={{ '--i': i, '--d': drift.toFixed(2) }}>
+                      <span className="hero__letter">{ch}</span>
+                    </span>
+                  )
+                })}
+              </span>
+            ))}
+          </span>
+        </h1>
       </div>
-      <div className="content">
-        <motion.div
-          ref={backRef}
-          className="bg backLayer"
-          initial={{ opacity: 0, y: 180 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        ></motion.div>
-        <motion.div
-          ref={mid2Ref}
-          className="bg midLayer2"
-          initial={{ opacity: 0, y: 140 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        ></motion.div>
-        <motion.div
-          ref={mid1Ref}
-          className="bg midLayer1"
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        ></motion.div>
-        <div className="imageContainer">
-          <div ref={textRef} className="heroHeading">
-            <motion.span
-              initial={{ opacity: 0, y: 90 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-            >
-              Hey, I'm
-            </motion.span> 
-            <motion.span
-              initial={{ opacity: 0, y: 80 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="name-text"
-            >
-              Fazeel Nizam
-            </motion.span>
-          </div>
-          <motion.div
-            ref={text2Ref}
-            className="bannerFlipText"
-            initial={{ opacity: 0, y: 80 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+
+      <canvas ref={canvasRef} className="hero__particles" role="img" aria-label={cfg.portrait.alt} />
+      <canvas ref={fallbackRef} className="hero__fallback" aria-hidden="true" />
+
+      <div className="hero__bar container">
+        <div className="hero__intro">
+          <p className="hero__role" aria-hidden="true">
+            <span key={roleIndex} className="hero__role-text">
+              {n.roles[roleIndex]}
+            </span>
+          </p>
+          <p className="sr-only">{n.roles.join(', ')}</p>
+          <p className="hero__tagline">Embedded systems, IoT &amp; AI — from PCB to pixels.</p>
+        </div>
+        <div className="hero__cta">
+          <a
+            className="btn btn--primary"
+            href="#projects"
+            onClick={(e) => {
+              e.preventDefault()
+              scrollToTarget('#projects')
+            }}
           >
-            <FlipWords color="white" words={words} />
-          </motion.div>
-          <motion.div
-            className="frontLayer"
-            initial={{ opacity: 0, y: 80 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="frontImgContainer">
-              <img src={Hero1} alt="Front Layer" className="front" />
-            </div>
-            <motion.img
-              alt="Floating Right"
-              className="floating-right"
-              src={Hero4}
-              animate={floatingAnimationRight}
-            />
-            <motion.img
-              src={Hero3}
-              alt="Floating left"
-              className="floating-left"
-              animate={floatingAnimationLeft}
-            />
-          </motion.div>
+            View projects
+          </a>
+          <a className="btn btn--ghost" href={CV} download>
+            <FaDownload aria-hidden="true" /> Résumé
+          </a>
         </div>
       </div>
+
+      <a
+        className="hero__scroll"
+        href="#about"
+        aria-label="Scroll to About"
+        onClick={(e) => {
+          e.preventDefault()
+          scrollToTarget('#about')
+        }}
+      >
+        <FaArrowDown aria-hidden="true" />
+      </a>
     </section>
   )
 }

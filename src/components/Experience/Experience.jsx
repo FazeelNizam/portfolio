@@ -1,9 +1,7 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useRef } from 'react'
 import './Experience.scss'
-import AnimatedGradientText from '../ui/AnimatedGradientText'
-import { ScrollingCards } from '../ui/scrolling-cards'
-import { ShineBorder } from '../ui/shine-border'
+import TimelineCarousel from '../Timeline/TimelineCarousel'
+import useReveal from '../../hooks/useReveal'
 
 const experiences = [
   {
@@ -53,56 +51,48 @@ const experiences = [
   }
 ]
 
-const Experience = () => {
-  const cards = experiences.map((exp, index) => ({
-    card: (
-      <div className="timelineCard" style={{ width: '100%', margin: 0, overflow: 'hidden' }}>
-        <ShineBorder shineColor={["#9200fa", "#c385f0", "#6d00b8"]} duration={10} />
-        <div className="cardHeader">
-          <div className="timelineYear" style={{ marginBottom: '1rem', textAlign: 'left' }}>
-            <span style={{ color: '#9200fa', fontWeight: 'bold', background: 'rgba(146, 0, 250, 0.1)', padding: '6px 12px', borderRadius: '12px', fontSize: '0.9rem' }}>{exp.year}</span>
-          </div>
-          <h3 className="degree">{exp.role}</h3>
-          <h4 className="field">{exp.company}</h4>
-          <div className="institution">
-            <span className="institutionName">{exp.location}</span>
-          </div>
-        </div>
-        <div className="cardBody">
-          <p className="description">{exp.description}</p>
-          <div className="skills">
-            <h5>Key Skills:</h5>
-            <div className="skillTags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-              {exp.skills.map((skill, idx) => (
-                <AnimatedGradientText key={idx} className="!px-3 !py-1 !rounded-full !m-0 !bg-[#9200fa]/10" speed={3}>
-                  <span className="text-xs font-medium text-white/80">{skill}</span>
-                </AnimatedGradientText>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-    rotate: (index % 2 === 0 ? 1 : -1) * (index % 3 + 1) * 2,
-  }))
+const items = experiences.map((e) => ({ ...e, title: e.role, railLabel: e.year.split(' ')[1] || e.year }))
 
+const Experience = () => {
+  const ref = useRef(null)
+  useReveal(ref)
   return (
-    <section className="experienceWrapper" id="experience">
-      <div className="experienceContainer">
-        <motion.div 
-          className="experienceHeader"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <h2>
+    <section className="experience section" id="experience" ref={ref} aria-labelledby="experience-title">
+      <div className="container">
+        <header className="section-head reveal">
+          <span className="section-head__eyebrow">Career</span>
+          <h2 id="experience-title">
             My <span className="highlight-text">Experience</span>
           </h2>
-          <p>Professional journey and responsibilities</p>
-        </motion.div>
-
-        <ScrollingCards cards={cards} cardWidth={450} top={50} left={25} animationLength={300} />
+          <p>Professional journey and responsibilities.</p>
+        </header>
+        <div className="reveal" style={{ '--i': 1 }}>
+          <TimelineCarousel
+            label="Work experience"
+            items={items}
+            renderCard={(exp, i) => (
+              <>
+                <div className="tl-card__top">
+                  <span className="tl-card__period">{exp.year}</span>
+                  <span className="tl-card__num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <h3 className="tl-card__title">{exp.role}</h3>
+                <p className="tl-card__org">{exp.company}</p>
+                <p className="tl-card__place">{exp.location}</p>
+                <p className="tl-card__desc">{exp.description}</p>
+                <ul className="pj-pills" aria-label="Key skills">
+                  {exp.skills.map((s) => (
+                    <li key={s} className="pill">
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          />
+        </div>
       </div>
     </section>
   )

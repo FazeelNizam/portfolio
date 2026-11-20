@@ -1,212 +1,108 @@
-"use client"
+import React, { Suspense, lazy, useLayoutEffect, useRef, useState } from 'react'
+import './Projects.scss'
+import ProjectShowcase from './ProjectShowcase'
+import ProjectModal from './ProjectModal'
+import useReveal from '../../hooks/useReveal'
+import { embeddedProjects } from '../../data/embeddedProjects'
+import { webProjects } from '../../data/webProjects'
+import { designProjects } from '../../data/designProjects'
+import { FaCode, FaPalette, FaMicrochip } from 'react-icons/fa'
 
-import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import "./Projects.scss"
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+const DesignGallery = lazy(() => import(/* webpackChunkName: "gallery" */ './DesignGallery'))
 
-// UI Components
-import ProjectModal from "./ProjectModal"
-import ProjectList from "./ProjectList"
-import DesignGallery from "./DesignGallery"
-import ImageModal from "./ImageModal"
-import { TypewriterEffectSmooth } from '../ui/TypeWriter'
-import { Dock, DockIcon } from '../ui/Dock'
-
-// Data
-import { embeddedProjects } from "../../data/embeddedProjects"
-import { webProjects } from "../../data/webProjects"
-import { designProjects } from "../../data/designProjects"
-
-// Icons
-import { FaCode, FaPalette, FaMicrochip } from "react-icons/fa"
-
-gsap.registerPlugin(ScrollTrigger)
-
-const words = [
-  {
-    text: 'This',
-  },
-  {
-    text: 'section',
-  },
-  {
-    text: 'still',
-  },
-  {
-    text: 'under',
-  },
-  {
-    text: 'development.',
-  },
-  {
-    text: 'Stay',
-  },
-
-  {
-    text: 'tuned',
-  },
-  {
-    text: '.',
-  },
-  {
-    text: '.',
-  },
-  {
-    text: '.',
-  },
-  {
-    text: '!',
-  },
+const TABS = [
+  { id: 'embedded', label: 'Embedded Systems', short: 'Embedded', icon: FaMicrochip, data: embeddedProjects },
+  { id: 'web', label: 'Web & Software', short: 'Web', icon: FaCode, data: webProjects },
+  { id: 'design', label: 'Design Works', short: 'Design', icon: FaPalette, data: designProjects },
 ]
 
 const Projects = () => {
-  const [activeTab, setActiveTab] = useState("embedded")
-  const [selectedProject, setSelectedProject] = useState(null)
-  const [selectedImage, setSelectedImage] = useState(null)
-  
-  const projectsRef = useRef(null)
+  const [tab, setTab] = useState('embedded')
+  const [selected, setSelected] = useState(null)
+  const sectionRef = useRef(null)
+  const listRef = useRef(null)
+  const indRef = useRef(null)
+  useReveal(sectionRef)
 
-  useEffect(() => {
-    // Refresh ScrollTrigger after tab transition finishes and layout settles
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh()
-    }, 600)
-    return () => clearTimeout(timer)
-  }, [activeTab])
+  // sliding tab indicator
+  useLayoutEffect(() => {
+    const move = () => {
+      const el = listRef.current && listRef.current.querySelector(`[data-tab="${tab}"]`)
+      if (!el || !indRef.current) return
+      indRef.current.style.setProperty('--x', `${el.offsetLeft}px`)
+      indRef.current.style.setProperty('--w', `${el.offsetWidth}px`)
+    }
+    move()
+    window.addEventListener('resize', move)
+    document.fonts && document.fonts.ready.then(move)
+    return () => window.removeEventListener('resize', move)
+  }, [tab])
 
-  const tabs = [
-    { id: "embedded", label: "Embedded Systems", icon: <FaMicrochip /> },
-    { id: "web", label: "Web & Software", icon: <FaCode /> },
-    { id: "design", label: "Design Works", icon: <FaPalette /> },
-  ]
-
-  const projects = {
-    embedded: embeddedProjects,
-    web: webProjects,
-    design: designProjects,
+  const onTabKey = (e) => {
+    const i = TABS.findIndex((t) => t.id === tab)
+    let next = null
+    if (e.key === 'ArrowRight') next = TABS[(i + 1) % TABS.length]
+    if (e.key === 'ArrowLeft') next = TABS[(i - 1 + TABS.length) % TABS.length]
+    if (e.key === 'Home') next = TABS[0]
+    if (e.key === 'End') next = TABS[TABS.length - 1]
+    if (!next) return
+    e.preventDefault()
+    setTab(next.id)
+    listRef.current.querySelector(`[data-tab="${next.id}"]`).focus()
   }
 
-  const handleImageClick = (image) => {
-    setSelectedImage(image)
-  }
-
-  const closeModal = () => {
-    setSelectedProject(null)
-  }
-
-  const closeImageModal = () => {
-    setSelectedImage(null)
-  }
+  const current = TABS.find((t) => t.id === tab)
 
   return (
-    <section className="projectsWrapper relative" id="projects" ref={projectsRef}>
-      <div className="projectsContainer">
-        <motion.div
-          className="projectsHeader"
-          initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          viewport={{ once: true, margin: "-10%" }}
-        >
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+    <section className="projects section" id="projects" ref={sectionRef} aria-labelledby="projects-title">
+      <div className="container">
+        <header className="section-head reveal">
+          <span className="section-head__eyebrow">Selected work</span>
+          <h2 id="projects-title">
             My <span className="highlight-text">Projects</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            Explore my work across different domains
-          </motion.p>
-          {/* <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            <TypewriterEffectSmooth words={words}/>
-          </motion.div> */}
-        </motion.div>
+          </h2>
+          <p>Hardware, software and visual design — explore each domain.</p>
+        </header>
 
-
-
-        <motion.div
-          className="projectsContent"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          {activeTab !== "design" && (
-            <div className="projectsCarousel">
-              <div className="sky-container">
-                <div className="star1"></div>
-                <div className="star2"></div>
-                <div className="star3"></div>
-              </div>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  style={{ width: "100%" }}
-                >
-                  <ProjectList
-                    projects={projects[activeTab]}
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          )}
-
-          {activeTab === "design" && (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key="design"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                style={{ width: "100%" }}
+        <div className="projects__tabs reveal" style={{ '--i': 1 }}>
+          <div className="seg" role="tablist" aria-label="Project categories" ref={listRef} onKeyDown={onTabKey}>
+            <span className="seg__ind" ref={indRef} aria-hidden="true" />
+            {TABS.map(({ id, label, short, icon: Icon, data }) => (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                id={`tab-${id}`}
+                data-tab={id}
+                aria-selected={tab === id}
+                aria-controls={`panel-${id}`}
+                tabIndex={tab === id ? 0 : -1}
+                className={`seg__btn${tab === id ? ' is-active' : ''}`}
+                onClick={() => setTab(id)}
               >
-                <DesignGallery designs={projects.design} onImageClick={handleImageClick} />
-              </motion.div>
-            </AnimatePresence>
-          )}
-        </motion.div>
-
-        {/* Sticky Dock Navigation */}
-        <div className="sticky bottom-6 z-50 w-full flex justify-center pointer-events-none mt-8">
-          <div className="pointer-events-auto">
-            <Dock>
-              {tabs.map((tab) => (
-                <DockIcon
-                  key={tab.id}
-                  label={tab.label}
-                  active={activeTab === tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    projectsRef.current?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  {tab.icon}
-                </DockIcon>
-              ))}
-            </Dock>
+                <Icon aria-hidden="true" />
+                <span className="seg__long">{label}</span>
+                <span className="seg__short" aria-hidden="true">
+                  {short}
+                </span>
+                <span className="seg__count">{data.length}</span>
+              </button>
+            ))}
           </div>
+        </div>
+
+        <div className="projects__panel" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} key={tab}>
+          {tab === 'design' ? (
+            <Suspense fallback={<div className="projects__loading" aria-busy="true" />}>
+              <DesignGallery designs={designProjects} />
+            </Suspense>
+          ) : (
+            <ProjectShowcase projects={current.data} onOpen={setSelected} />
+          )}
         </div>
       </div>
 
-      <ProjectModal project={selectedProject} isOpen={!!selectedProject} onClose={closeModal} />
-
-      <ImageModal image={selectedImage} isOpen={!!selectedImage} onClose={closeImageModal} />
+      <ProjectModal project={selected} isOpen={!!selected} onClose={() => setSelected(null)} />
     </section>
   )
 }

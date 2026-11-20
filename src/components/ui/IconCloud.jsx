@@ -1,7 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
-// import { useTheme } from 'next-themes'
-import { Cloud, fetchSimpleIcons, renderSimpleIcon } from 'react-icon-cloud'
+import { useMemo } from 'react'
+import { Cloud } from 'react-icon-cloud'
 
+/**
+ * 3D tag cloud of tech logos.
+ *
+ * Previously this fetched ~36 icons from the simple-icons CDN plus a JSON index
+ * from raw.githubusercontent.com that now 404s upstream (console error on every
+ * visit, and some slugs no longer exist → "Cannot read properties of undefined
+ * (reading 'hex')"). It now renders the logo images that are already bundled
+ * with the site: no network requests, no errors.
+ */
 export const cloudProps = {
   containerProps: {
     style: {
@@ -9,7 +17,6 @@ export const cloudProps = {
       justifyContent: 'center',
       alignItems: 'center',
       width: '100%',
-      paddingTop: 40,
     },
   },
   options: {
@@ -28,43 +35,19 @@ export const cloudProps = {
   },
 }
 
-export const renderCustomIcon = (icon, theme) => {
-  const bgHex = theme === 'light' ? '#f3f2ef' : '#080510'
-  const fallbackHex = theme === 'light' ? '#6e6e73' : '#ffffff'
-  const minContrastRatio = theme === 'dark' ? 2 : 1.2
-
-  return renderSimpleIcon({
-    icon,
-    bgHex,
-    fallbackHex,
-    minContrastRatio,
-    size: 42,
-    aProps: {
-      href: undefined,
-      target: undefined,
-      rel: undefined,
-      onClick: (e) => e.preventDefault(),
-    },
-  })
-}
-
-export default function IconCloud({ iconSlugs }) {
-  const [data, setData] = useState(null)
-  // const { theme } = useTheme()
-
-  useEffect(() => {
-    fetchSimpleIcons({ slugs: iconSlugs }).then(setData)
-  }, [iconSlugs])
-
-  const renderedIcons = useMemo(() => {
-    if (!data) return null
-
-    return Object.values(data.simpleIcons).map((icon) => renderCustomIcon(icon))
-  }, [data])
-
+export default function IconCloud({ icons = [] }) {
+  const items = useMemo(
+    () =>
+      icons.map((icon) => (
+        <a key={icon.text} href="#about" title={icon.text} onClick={(e) => e.preventDefault()}>
+          <img src={icon.svg} alt={icon.text} width="21" height="21" />
+        </a>
+      )),
+    [icons]
+  )
   return (
     <Cloud {...cloudProps}>
-      <>{renderedIcons}</>
+      <>{items}</>
     </Cloud>
   )
 }

@@ -1,0 +1,31 @@
+// Fixed space layer behind all content. The CSS gradient is what you see before
+// three.js has loaded (and in the no-WebGL fallback), so the swap is seamless.
+.space-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60vmax 40vmax at 50% 36%, rgba(146, 0, 250, 0.16), transparent 70%),
+    radial-gradient(50vmax 35vmax at 85% 110%, rgba(29, 11, 92, 0.5), transparent 70%),
+    var(--bg);
+  contain: strict;
+
+  &__canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    // large viewport height: mobile URL-bar show/hide doesn't resize the GL buffer
+    height: 100vh;
+    height: 100lvh;
+    display: block;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+
+  &--webgl &__canvas,
+  &--fallback &__canvas {
+    opacity: 1;
+  }
+}
